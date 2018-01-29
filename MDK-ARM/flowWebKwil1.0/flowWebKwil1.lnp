@@ -1,0 +1,27 @@
+--cpu Cortex-M7.fp.dp
+"flowwebkwil1.0\startup_stm32f767xx.o"
+"flowwebkwil1.0\stm32f7xx_hal_flash.o"
+"flowwebkwil1.0\stm32f7xx_hal_rcc_ex.o"
+"flowwebkwil1.0\stm32f7xx_hal_cortex.o"
+"flowwebkwil1.0\stm32f7xx_hal_flash_ex.o"
+"flowwebkwil1.0\stm32f7xx_hal_tim_ex.o"
+"flowwebkwil1.0\stm32f7xx_hal_rcc.o"
+"flowwebkwil1.0\stm32f7xx_hal_pwr.o"
+"flowwebkwil1.0\stm32f7xx_hal_gpio.o"
+"flowwebkwil1.0\stm32f7xx_hal_dma.o"
+"flowwebkwil1.0\stm32f7xx_hal_dma_ex.o"
+"flowwebkwil1.0\stm32f7xx_hal_pwr_ex.o"
+"flowwebkwil1.0\stm32f7xx_hal_spi.o"
+"flowwebkwil1.0\stm32f7xx_hal.o"
+"flowwebkwil1.0\stm32f7xx_hal_uart.o"
+"flowwebkwil1.0\stm32f7xx_hal_tim.o"
+"flowwebkwil1.0\stm32f7xx_hal_i2c.o"
+"flowwebkwil1.0\stm32f7xx_hal_i2c_ex.o"
+"flowwebkwil1.0\system_stm32f7xx.o"
+"flowwebkwil1.0\main.o"
+"flowwebkwil1.0\stm32f7xx_hal_msp.o"
+"flowwebkwil1.0\stm32f7xx_it.o"
+--library_type=microlib --strict --scatter "flowWebKwil1.0\flowWebKwil1.sct"
+--diag_suppress=L6329 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "flowWebKwil1.map" -o flowWebKwil1.0\flowWebKwil1.0
