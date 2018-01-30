@@ -1,4 +1,5 @@
 flowwebkwil1.0\eleweight.o: ..\Src\eleWeight.c
+flowwebkwil1.0\eleweight.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 flowwebkwil1.0\eleweight.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h
 flowwebkwil1.0\eleweight.o: ..\Inc\stm32f7xx_hal_conf.h
 flowwebkwil1.0\eleweight.o: ..\Inc\main.h

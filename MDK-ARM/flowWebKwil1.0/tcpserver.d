@@ -1,6 +1,7 @@
 flowwebkwil1.0\tcpserver.o: ..\Src\tcpServer.c
 flowwebkwil1.0\tcpserver.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 flowwebkwil1.0\tcpserver.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\ctype.h
+flowwebkwil1.0\tcpserver.o: ..\Inc\RS485.h
 flowwebkwil1.0\tcpserver.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h
 flowwebkwil1.0\tcpserver.o: ..\Inc\stm32f7xx_hal_conf.h
 flowwebkwil1.0\tcpserver.o: ..\Inc\main.h
@@ -33,6 +34,7 @@ flowwebkwil1.0\tcpserver.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pw
 flowwebkwil1.0\tcpserver.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_spi.h
 flowwebkwil1.0\tcpserver.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart.h
 flowwebkwil1.0\tcpserver.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart_ex.h
+flowwebkwil1.0\tcpserver.o: ..\Inc\RS485.h
 flowwebkwil1.0\tcpserver.o: ..\Inc\tcpServer.h
 flowwebkwil1.0\tcpserver.o: ..\Inc\IOControl.h
 flowwebkwil1.0\tcpserver.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h

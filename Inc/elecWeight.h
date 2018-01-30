@@ -7,13 +7,13 @@
 
 //Entry for reading Electronic Weight
     //Return -100.00 means error
-HAL_StatusTypeDef GetWeightValue();
+HAL_StatusTypeDef GetWeightValue(void);
 
-float analyWeightValue(char rawData[20]);
+float analyWeightValue(uint8_t rawData[20]);
 
-void loopWeight();
+void loopWeight(void);
 
-HAL_StatusTypeDef SetWeightZero();
+HAL_StatusTypeDef SetWeightZero(void);
 
 // SERIALDEVICES_H
 #endif 

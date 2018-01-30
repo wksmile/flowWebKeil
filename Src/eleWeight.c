@@ -1,3 +1,4 @@
+#include <string.h>
 #include "stm32f7xx_hal.h"
 #include "stm32f7xx_hal_uart.h"
 #include "elecWeight.h"
@@ -38,12 +39,12 @@ HAL_StatusTypeDef GetWeightValue()
     //Clear input buffer
     // tcflush(fdSerialWeight, TCIFLUSH);
     //Send read command
-    uint8_t cmd = {'R'};
-    return HAL_UART_Transmit(&huart7,'R',1,100);
+    uint8_t cmd[] = {'R'};
+    return HAL_UART_Transmit(&huart7,cmd,1,100);
 }
 
 // 解析电子秤获取的重量
-float analyWeightValue(char rawData[20]){
+float analyWeightValue(uint8_t rawData[20]){
     float weight = 0;
     rawData[3]-='0';
     rawData[4]-='0';
@@ -66,16 +67,17 @@ float analyWeightValue(char rawData[20]){
 
 // 循环获取电子秤的重量
 void loopWeight() {
-    uint8_t *weightData;
+    uint8_t weightData[20];
     if(GetWeightValue() == HAL_OK) {
-        if(HAL_UART_Receive(&huart7,*weightData,20,100) == HAL_OK){
-            if(strlen(*weightData)>0){
-                char ret[20] = *weightData;
-                float receivWeight = analyWeightValue(ret);
+        if(HAL_UART_Receive(&huart7,weightData,20,100) == HAL_OK){
+            if(weightData[0] != NULL){
+                // char ret[20] = *weightData;
+                float receivWeight = analyWeightValue(weightData);
 
-                char weightChar;
+                char weightChar[10];
                 sprintf(weightChar,"%g",receivWeight);
-                sendData("Weight",weightChar,100);
+				char weight[15] = "Weight:";
+                sendData(weight,weightChar,100);
             }
         }
     }

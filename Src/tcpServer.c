@@ -1,5 +1,6 @@
 #include <string.h>
 #include <ctype.h>
+#include "RS485.h"
 #include "stm32f7xx_hal.h"
 #include "stm32f7xx_hal_uart.h"
 #include "stm32f7xx_hal_def.h"
@@ -21,15 +22,17 @@ uint8_t inverterStatus = 0;
 //  key 形式类似于"Temperature:"
 // sendData("Temperature:","38");
 // 中断发送
+
 void sendDataIT(char key[],char value[]){
-	char TCPPack[] = strcat(key, value);
-	HAL_UART_Transmit_IT(&huart4,TCPPack,sizeof(TCPPack));
+	//uint8_t TCPPack[25];
+	strcat(key, value);
+	HAL_UART_Transmit_IT(&huart4,(uint8_t *)key,strlen(key));
 }
 
 // 普通发送，timeout一般设为100ms
-void sendData(char key[],char value[], unsigned int timeout){
-	char TCPPack[] = strcat(key, value);
-	HAL_UART_Transmit(&huart4,TCPPack,sizeof(TCPPack),timeout);
+void sendData(char key[],char value[],uint8_t timeout){
+	strcat(key, value);
+	HAL_UART_Transmit(&huart4,(uint8_t *)key,strlen(key),timeout);
 }
 
 /*
@@ -142,38 +145,43 @@ void SLOT_ProcessSensorData()
 }   */
 
 // 解析客户端命令,注意命令大小写
-void SLOT_TCPdecoder(char receiveData[]){
+void SLOT_TCPdecoder(uint8_t receiveData[]){
 	char s[2] = "=";
-	char key[] = strtok(receiveData,s);
-	char value[] = strtok(NULL,s);
+	char *key = strtok((char *)receiveData,s);
+	char *value = strtok(NULL,s);
 	// 没有收到数据
 	if(strlen(key)<=1) return;
 	// 入水阀门命令
-	if(key=="valvein") {
+	char *valvein = "valvein";
+	char *valveout = "valveout";
+	char *valveside = "valveside";
+	char *pump = "pump";
+	char *reset = "reset";
+	if(*key == *valvein) {
 		int valueint=atoi(value);
 		setRelayState(4, valueint);
 		return;
 	}
 	// 出水阀门命令
-	if(key=="valveout") {
+	if(*key==*valveout) {
 		int valueint=atoi(value);
 		setRelayState(3, valueint);
 		return;
 	}
 	// 侧阀门控制命令
-	if(key=="valveside") {
+	if(*key==*valveside) {
 		int valueint = atoi(value);
 		setRelayState(1, valueint);
 		return;
 	}
 	// 设置电机频率
-	if(key=="pump"){
+	if(*key==*pump){
 		SetInverterFreq(atof(value));
 		inverterStatus = 1;
 		return;
 	}
 	// 重置实验
-	if(key=="reset"){
+	if(*key==*reset){
 	    setRelayState(4, 0);  //顶阀关
         setRelayState(1, 0);  //侧阀关
         setRelayState(3, 1);  //出水阀开
@@ -198,9 +206,9 @@ void wifiStartListening() {
 // 循环查询wifi模块是否接收到数据
 void wifiDataReceived() {
 	if(huart4.RxXferCount < 250) {
-        unsigned char numOfBuffer;
-		numOfBuffer = 250-huart4.RxXferCount;   // 实际接收到的字符总数
-		char wifiData[] = *wifiRxBuffer;
+        //unsigned char numOfBuffer;
+		//numOfBuffer = 250-huart4.RxXferCount;   // 实际接收到的字符总数
+		uint8_t *wifiData = wifiRxBuffer;
 		// 这里发送到单片机去解析数据
         SLOT_TCPdecoder(wifiData);
 		huart5.RxXferCount = 250;

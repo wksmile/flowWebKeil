@@ -1,5 +1,5 @@
 flowwebkwil1.0\ultrasonic.o: ..\Src\Ultrasonic.c
-flowwebkwil1.0\ultrasonic.o: ..\Inc\ultrasonic.h
+flowwebkwil1.0\ultrasonic.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 flowwebkwil1.0\ultrasonic.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h
 flowwebkwil1.0\ultrasonic.o: ..\Inc\stm32f7xx_hal_conf.h
 flowwebkwil1.0\ultrasonic.o: ..\Inc\main.h
@@ -32,3 +32,5 @@ flowwebkwil1.0\ultrasonic.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_p
 flowwebkwil1.0\ultrasonic.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_spi.h
 flowwebkwil1.0\ultrasonic.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart.h
 flowwebkwil1.0\ultrasonic.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart_ex.h
+flowwebkwil1.0\ultrasonic.o: ..\Inc\ultrasonic.h
+flowwebkwil1.0\ultrasonic.o: ..\Inc\tcpServer.h

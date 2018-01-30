@@ -1,4 +1,5 @@
 flowwebkwil1.0\rs485loop.o: ..\Src\RS485Loop.c
+flowwebkwil1.0\rs485loop.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 flowwebkwil1.0\rs485loop.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h
 flowwebkwil1.0\rs485loop.o: ..\Inc\stm32f7xx_hal_conf.h
 flowwebkwil1.0\rs485loop.o: ..\Inc\main.h

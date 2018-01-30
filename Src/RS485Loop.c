@@ -1,6 +1,6 @@
+#include <string.h>
 #include "stm32f7xx_hal.h"
 #include "stm32f7xx_hal_uart.h"
-#include "stm32f7xx_hal_def.h"
 #include "stdio.h"
 #include "RS485.h"
 #include "tcpServer.h"
@@ -147,7 +147,7 @@ HAL_StatusTypeDef GetVortexData()
 }
 
 // 解析涡街流量计读取的数据，ret为返回的数据
-int AnalyVortexData(char ret[30]){
+int AnalyVortexData(uint8_t ret[30]){
         int flowRate = 0;
         int totalFlow = 0;
         int i = 0;
@@ -202,25 +202,27 @@ float getVortexFlowrate(){
 // 这个函数应该放在主循环中
 // 普通接收
 void loopVortex(){
-    uint8_t *vortesData;
+    uint8_t vortesData[30];
     // 发送获取数据成功
     if(GetVortexData() == HAL_OK) {
         // 数据接收成功
         if(HAL_UART_Receive(&huart3,vortesData,30,100) == HAL_OK) {
             // 接收的数据不为空
-            if (strlen(vortesData)>0)
+			// char recData[30] = vortesData;
+            if (vortesData[0] != NULL)
             {
-                char ret[30] = *vortesData;
-                // 解析数据
-                if(AnalyVortexData(ret) == 0){
+                // 解析数据,返回0说明解析数据成功
+                if(AnalyVortexData(vortesData) == 0){
                     // 如果解析后有_vortexTotalFlow数据
-                    char totalFlowChar[16]={0};
+                    char totalFlowChar[16];
                     sprintf(totalFlowChar,"%g",_vortexTotalFlow);
-                    sendData("TotalFlow:",totalFlowChar,100);
+					char totalFlow[25] = "TotalFlow:";
+                    sendData(totalFlow,totalFlowChar,100);
                     // 发送获取的数据
-                    char flowRateChar[16]={0};
+                    char flowRateChar[16];
                     sprintf(flowRateChar,"%g",_vortexFlowrate);
-                    sendData("FlowRate:",flowRateChar,100);
+					char flowRate[25] = "FlowRate:";
+                    sendData(flowRate,flowRateChar,100);
                 }
             }
         }
@@ -244,7 +246,7 @@ void loopVortex(){
             // 这里发送到单片机去解析数据
             huart3.RxXferCount = 30;
             huart3.pRxBuffPtr = vortexRxBuffer;
-            /*!操作缓冲数组，暂停接受中断
+             操作缓冲数组，暂停接受中断
             __HAL_UART_DISABLE_IT(&huart3, UART_IT_RXNE);
              vortexState = 2;
         }
@@ -294,14 +296,14 @@ HAL_StatusTypeDef ReadHeatMeter()
     }
 
     // Set baudrate to 2400, EVEN parity, for M-Bus设置波特率2400,奇校验
-    MX_USART3_UART_Init_2400();
+    uart3_change_baudrate_2400();
 
     HAL_Delay(10);
     return HAL_UART_Transmit(&huart3,cmd,16,100);
 }
 
 // 解析热能表的数据   ret热能表读取的数据结果
-struct HeatData AnanlyReadHeatMeterData(char ret[100]){
+struct HeatData AnanlyReadHeatMeterData(uint8_t ret[100]){
         int i = 0;
         int frameStart = 0;
         char parity = 0;
@@ -329,7 +331,7 @@ struct HeatData AnanlyReadHeatMeterData(char ret[100]){
         result.temperature = BCD(ret[frameStart+41])*100.0f + BCD(ret[frameStart+40])*1.0f + BCD(ret[frameStart+39])*0.01f;
 
     end:
-        MX_USART3_UART_Init();
+        uart3_change_baudrate_9600();
 
     return result;
 }
@@ -340,13 +342,13 @@ int heatMetweState=0;
 char heatMeterData[100];
 
 void loopHeatMeter(){
-    uint8_t *heatMeterData;
+    uint8_t meterData[100];
     if(ReadHeatMeter() == HAL_OK) {
-        if(HAL_UART_Receive(&huart3,heatMeterData,100,100) == HAL_OK) {
-            if(strlen(heatMeterData)>0){
-                char ret[100] = *heatMeterData;
+        if(HAL_UART_Receive(&huart3,meterData,100,100) == HAL_OK) {
+            if(meterData[0] != NULL){
+                // uint8_t ret[100] = heatMeterData;
                 // 解析热能表数据
-                struct HeatData HeatMeterData = AnanlyReadHeatMeterData(ret);
+                struct HeatData HeatMeterData = AnanlyReadHeatMeterData(meterData);
                 // 发送数据
                 if(HeatMeterData.currentFlow>=0){
                     char flowChar[16]={0};
@@ -386,7 +388,7 @@ void loopHeatMeter(){
             // 这里发送到单片机去解析数据
             huart3.RxXferCount = 100;
             huart3.pRxBuffPtr = heatMeterRxBuffer;
-            /*!操作缓冲数组，暂停接受中断
+            !操作缓冲数组，暂停接受中断
             __HAL_UART_DISABLE_IT(&huart3, UART_IT_RXNE);
              heatMetweState = 2;
         }
