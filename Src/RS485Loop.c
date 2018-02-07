@@ -136,6 +136,8 @@ char vortexData[30];
 
 // 获取涡街流量计的数据 Triggers a read operation, refresh the flowrate and totalFlowrate，主函数中一直循环每隔一段时间读取涡街流量计的数据
 // @return {HAL_ERROR} {HAL_TIMEOUT} {HAL_OK}
+// #define ADDR_FLOWMETER  0x02
+// 02 04 00 00 00 04 f1 fa
 HAL_StatusTypeDef GetVortexData()
 {
     unsigned char cmd[8] = {ADDR_FLOWMETER, 0x04, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00};

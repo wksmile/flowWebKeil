@@ -155,50 +155,50 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>122</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134226362</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>G:\椤圭洰鏂囦欢\姣曚笟璁捐\杞欢宸ョ▼\softwore\flowWebKwil1.0\Src\main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\flowWebKwil1\../Src/main.c\122</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
           <LineNumber>256</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134224984</Address>
+          <Address>134226496</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>G:\椤圭洰鏂囦欢\姣曚笟璁捐\杞欢宸ョ▼\softwore\flowWebKwil1.0\Src\stm32f7xx_it.c</Filename>
+          <Filename>../Src/stm32f7xx_it.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\flowWebKwil1\../Src/stm32f7xx_it.c\256</Expression>
         </Bp>
         <Bp>
-          <Number>2</Number>
+          <Number>1</Number>
           <Type>0</Type>
           <LineNumber>242</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134224972</Address>
+          <Address>134226484</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>G:\椤圭洰鏂囦欢\姣曚笟璁捐\杞欢宸ョ▼\softwore\flowWebKwil1.0\Src\stm32f7xx_it.c</Filename>
+          <Filename>../Src/stm32f7xx_it.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\flowWebKwil1\../Src/stm32f7xx_it.c\242</Expression>
+        </Bp>
+        <Bp>
+          <Number>2</Number>
+          <Type>0</Type>
+          <LineNumber>190</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134230444</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>../Src/main.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\flowWebKwil1\../Src/main.c\190</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -296,7 +296,7 @@
 
   <Group>
     <GroupName>Drivers/STM32F7xx_HAL_Driver</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -608,7 +608,7 @@
       <GroupNumber>4</GroupNumber>
       <FileNumber>26</FileNumber>
       <FileType>1</FileType>
-      <tvExp>1</tvExp>
+      <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Src\tcpServer.c</PathWithFileName>

@@ -336,7 +336,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F767xx</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Inc;../Drivers/STM32F7xx_HAL_Driver/Inc;../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F7xx/Include;../Drivers/CMSIS/Include;..\MDK-ARM</IncludePath>
+              <IncludePath>..\Inc;      ../Drivers/STM32F7xx_HAL_Driver/Inc;      ../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy;      ../Drivers/CMSIS/Device/ST/STM32F7xx/Include;      ../Drivers/CMSIS/Include;      ..\MDK-ARM;     ../Inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>

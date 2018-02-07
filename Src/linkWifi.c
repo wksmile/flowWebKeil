@@ -1,6 +1,5 @@
 #include "main.h"
 #include "stm32f7xx_hal.h"
-#include "stm32f7xx_hal.h"
 
 // 设置wifi参数的函数库
 

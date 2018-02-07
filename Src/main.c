@@ -41,14 +41,18 @@
 #include "stm32f7xx_hal.h"
 
 /* USER CODE BEGIN Includes */
+#include "stm32f7xx_hal_gpio.h"
 #include "IOControl.h"
 #include "RS485.h"
 #include "tcpServer.h"
+#include "elecWeight.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
 
 SPI_HandleTypeDef hspi2;
+
+TIM_HandleTypeDef htim2;
 
 UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart5;
@@ -72,6 +76,7 @@ static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_UART7_Init(void);
+static void MX_TIM2_Init(void);
 static void MX_NVIC_Init(void);
 
 /* USER CODE BEGIN PFP */
@@ -80,6 +85,44 @@ static void MX_NVIC_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+char *strcat(char *dest, const char *src);
+
+uint8_t aRxBuffer[20];
+uint8_t sendData7 = 'R';
+char receive[20];
+
+void loop(){
+  // 循环发�?�读取电子秤数据到tcp服务�?
+	uint8_t numOfBuffer;
+	if(huart7.RxXferCount < 20) {
+		numOfBuffer = 20-huart7.RxXferCount;   // Êµ¼Ê½ÓÊÕµ½µÄ×Ö·û×ÜÊý
+		HAL_UART_Transmit(&huart4,aRxBuffer,sizeof(aRxBuffer),100);
+		// ½«aRxBufferÇå¿Õ
+		for(int i=0;i<20;i++){
+			aRxBuffer[i] = NULL;
+		}
+		huart7.RxXferCount = 20;
+		huart7.pRxBuffPtr = aRxBuffer;
+		//HAL_UART_Transmit_IT(&huart7, &sendData7, sizeof(sendData7));
+	}
+}
+
+void test(){
+	uint8_t numOfBuffer;
+	if(huart7.RxXferCount < 20) {
+		numOfBuffer = 20-huart7.RxXferCount;   // Êµ¼Ê½ÓÊÕµ½µÄ×Ö·û×ÜÊý
+		strcat(receive," -receive");
+		HAL_UART_Transmit(&huart7,(uint8_t *)receive,sizeof(receive),100);
+		HAL_Delay(500);
+		// ½«aRxBufferÇå¿Õ
+		for(int i=0;i<20;i++){
+			receive[i] = NULL;
+		}
+		huart7.RxXferCount = 20;
+		huart7.pRxBuffPtr = (uint8_t*)receive;
+		//HAL_UART_Transmit(&huart7, &sendData7, sizeof(sendData7));
+	}
+}
 
 /* USER CODE END 0 */
 
@@ -115,44 +158,48 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
   MX_UART7_Init();
+  MX_TIM2_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
 
   /* USER CODE BEGIN 2 */
-  // 关闭�?有的电磁�?
-  setRelayState(1, 0);
-  setRelayState(2, 0);
-  setRelayState(3, 0);
-  setRelayState(4, 0);
-  setRelayState(5, 0);
-	// unsigned char cmd[8] = {0x01, 0x06, 0x20, 0x00, 0x00, 0x05, 0x00, 0x00};
-	HAL_Delay(100);
+ 
+HAL_GPIO_WritePin(GPIOD,GPIO_PIN_0,GPIO_PIN_SET);
+
+HAL_Delay(500);
+
+//WIFI_setParameter("433_123", "433433433","192.168.1.105");
+
+// WIFI_setParameter("TP-LINK_5D08", "00000000","192.168.1.101");
+//uint8_t weightRxBuffer[20];
+//HAL_UART_Receive_IT(&huart7,weightRxBuffer,20);
+
+//HAL_UART_Transmit_IT(&huart7,&sendData7,sizeof(sendData7));
+
+// HAL_UART_Receive_IT(&huart7,aRxBuffer,20);
+//uint8_t bRxBuffer[20] = {'R'};
+
+uint8_t sendData9[] = {"send\n"};
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	//loop();
+	//HAL_UART_Transmit(&huart4,sendData9,sizeof(sendData9),100);
+	//HAL_UART_Transmit(&huart7,&sendData7,sizeof(sendData7),100);
+    loopWeight();
+  	HAL_Delay(500);
+	//HAL_UART_Receive(&huart7,aRxBuffer,sizeof(aRxBuffer),100);
+	//loop();
+	  
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-
-	  //HAL_UART_Transmit_IT(&huart3,cmd,8);
-	  //HAL_Delay(1000);
-    /*
-	  StartInverter();
-	  HAL_Delay(15000);
-	  StopInverter();
-	  HAL_Delay(15000);
-	  StartInverter();
-	  HAL_Delay(15000);
-	  SetInverterFreq(30);
-	  HAL_Delay(6000);
-    SetInverterFreq(50);
-    HAL_Delay(6000);
-    StopInverter();  */
-    /*è¿™é�?�Œå�??å¯å›¾å½¢ç�?�Œé¢æ˜¾ç�??*/
+	 
   }
   /* USER CODE END 3 */
 
@@ -251,6 +298,9 @@ static void MX_NVIC_Init(void)
   /* UART4_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(UART4_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(UART4_IRQn);
+  /* TIM2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(TIM2_IRQn, 6, 0);
+  HAL_NVIC_EnableIRQ(TIM2_IRQn);
 }
 
 /* SPI2 init function */
@@ -273,6 +323,39 @@ static void MX_SPI2_Init(void)
   hspi2.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
   hspi2.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
   if (HAL_SPI_Init(&hspi2) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+}
+
+/* TIM2 init function */
+static void MX_TIM2_Init(void)
+{
+
+  TIM_ClockConfigTypeDef sClockSourceConfig;
+  TIM_MasterConfigTypeDef sMasterConfig;
+
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 4200;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 199;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
@@ -305,8 +388,8 @@ static void MX_UART5_Init(void)
 {
 
   huart5.Instance = UART5;
-  huart5.Init.BaudRate = 115200;
-  huart5.Init.WordLength = UART_WORDLENGTH_7B;
+  huart5.Init.BaudRate = 9600;
+  huart5.Init.WordLength = UART_WORDLENGTH_8B;
   huart5.Init.StopBits = UART_STOPBITS_1;
   huart5.Init.Parity = UART_PARITY_NONE;
   huart5.Init.Mode = UART_MODE_TX_RX;
@@ -326,8 +409,8 @@ static void MX_UART7_Init(void)
 {
 
   huart7.Instance = UART7;
-  huart7.Init.BaudRate = 115200;
-  huart7.Init.WordLength = UART_WORDLENGTH_7B;
+  huart7.Init.BaudRate = 9600;
+  huart7.Init.WordLength = UART_WORDLENGTH_8B;
   huart7.Init.StopBits = UART_STOPBITS_1;
   huart7.Init.Parity = UART_PARITY_NONE;
   huart7.Init.Mode = UART_MODE_TX_RX;
@@ -468,7 +551,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-/* USART3 init function BAUD is 2400 波特�?2400，奇校验*/
+/* USART3 init function BAUD is 2400 æ³¢ç‰¹ç�??2400ï¼Œå¥‡æ ¡éª�?*/
 
 /* USER CODE END 4 */
 

@@ -29,6 +29,8 @@ flowwebkwil1.0\main.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_i2c_ex.
 flowwebkwil1.0\main.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pwr.h
 flowwebkwil1.0\main.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pwr_ex.h
 flowwebkwil1.0\main.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_spi.h
+flowwebkwil1.0\main.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim.h
+flowwebkwil1.0\main.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim_ex.h
 flowwebkwil1.0\main.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart.h
 flowwebkwil1.0\main.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart_ex.h
 flowwebkwil1.0\main.o: ..\Inc\IOControl.h
@@ -36,3 +38,4 @@ flowwebkwil1.0\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 flowwebkwil1.0\main.o: ..\Inc\RS485.h
 flowwebkwil1.0\main.o: ..\Inc\RS485.h
 flowwebkwil1.0\main.o: ..\Inc\tcpServer.h
+flowwebkwil1.0\main.o: ..\Inc\elecWeight.h

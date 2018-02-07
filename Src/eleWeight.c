@@ -4,6 +4,7 @@
 #include "elecWeight.h"
 #include "RS485.h"
 #include "IOControl.h"
+#include "tcpServer.h"
 
 extern UART_HandleTypeDef huart7;
 
@@ -40,7 +41,7 @@ HAL_StatusTypeDef GetWeightValue()
     // tcflush(fdSerialWeight, TCIFLUSH);
     //Send read command
     uint8_t cmd[] = {'R'};
-    return HAL_UART_Transmit(&huart7,cmd,1,100);
+    return HAL_UART_Transmit(&huart7,cmd,2,100);
 }
 
 // 解析电子秤获取的重量
@@ -83,10 +84,14 @@ void loopWeight() {
     }
 }
 
+
+
+
+
 // 电子秤清零
 HAL_StatusTypeDef SetWeightZero()
 {
-    uint8_t cmd = {'Z'};
-    return HAL_UART_Transmit(&huart7,&cmd,1,100);
+    uint8_t cmd[] = {'Z'};
+    return HAL_UART_Transmit(&huart7,cmd,2,100);
 }
 
