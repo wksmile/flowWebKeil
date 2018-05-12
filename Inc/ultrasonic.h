@@ -7,18 +7,25 @@
 
 //------------------------------------超声波液位计函数------------------------------
 
-HAL_StatusTypeDef GetUltraTemperature(void);
+void GetUltraTemperature(void);
 // 解析并返回读取的超声波数据
 float anaslyUltraTemperature(uint8_t Data[5]);
 
 // 超声波距离
-HAL_StatusTypeDef GetUltraDistance(void);
+void GetUltraDistance(void);
 int anaslyUltraDistance(uint8_t rawData[5]);
 
-HAL_StatusTypeDef GetUltraDurationTime(void);
+void GetUltraDurationTime(void);
 int anaslyUltraTime(uint8_t rawData[5]);
+
+void open5Receive(void);
 
 // 放在主函数中循环运行的函数
 void loopUltra(void);
 
+// 循环获取串口5的中断数据
+void checkUart5Receive(void);
+
+// 超声波液位计获取数据的函数
+void ultraData(void);
 #endif

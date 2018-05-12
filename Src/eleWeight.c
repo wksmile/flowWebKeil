@@ -34,14 +34,17 @@ void weightAndUltraDataReceived() {
 
 // 发送获取电子秤重量指令
 // @return {HAL_ERROR} {HAL_TIMEOUT} {HAL_OK}
-HAL_StatusTypeDef GetWeightValue()
+// HAL_StatusTypeDef 类型
+// 数据格式 ww0000.00kg
+// 量程为30kg
+void GetWeightValue()
 {                                                  
     //Conversion takes a long time, so start new conversion after reading.
     //Clear input buffer
     // tcflush(fdSerialWeight, TCIFLUSH);
     //Send read command
     uint8_t cmd[] = {'R'};
-    return HAL_UART_Transmit(&huart7,cmd,2,100);
+    HAL_UART_Transmit(&huart7,cmd,2,100);
 }
 
 // 解析电子秤获取的重量
@@ -69,24 +72,19 @@ float analyWeightValue(uint8_t rawData[20]){
 // 循环获取电子秤的重量
 void loopWeight() {
     uint8_t weightData[20];
-    if(GetWeightValue() == HAL_OK) {
-        if(HAL_UART_Receive(&huart7,weightData,20,100) == HAL_OK){
-            if(weightData[0] != NULL){
-                // char ret[20] = *weightData;
-                float receivWeight = analyWeightValue(weightData);
+	GetWeightValue();
+	HAL_Delay(500);
+    HAL_UART_Receive(&huart7,weightData,20,100);
+    if(weightData[0] != NULL){
+        // char ret[20] = *weightData;
+        float receivWeight = analyWeightValue(weightData);
 
-                char weightChar[10];
-                sprintf(weightChar,"%g",receivWeight);
-				char weight[15] = "Weight:";
-                sendData(weight,weightChar,100);
-            }
-        }
+        char weightChar[10];
+        sprintf(weightChar,"%g",receivWeight);
+		char weight[15] = "Weight:";
+        sendData(weight,weightChar,100);
     }
 }
-
-
-
-
 
 // 电子秤清零
 HAL_StatusTypeDef SetWeightZero()

@@ -30,10 +30,9 @@ flowwebkwil1.0\rs485loop.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_i2
 flowwebkwil1.0\rs485loop.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pwr.h
 flowwebkwil1.0\rs485loop.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pwr_ex.h
 flowwebkwil1.0\rs485loop.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_spi.h
-flowwebkwil1.0\rs485loop.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim.h
-flowwebkwil1.0\rs485loop.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim_ex.h
 flowwebkwil1.0\rs485loop.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart.h
 flowwebkwil1.0\rs485loop.o: ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart_ex.h
 flowwebkwil1.0\rs485loop.o: ..\Inc\RS485.h
 flowwebkwil1.0\rs485loop.o: ..\Inc\RS485.h
 flowwebkwil1.0\rs485loop.o: ..\Inc\tcpServer.h
+flowwebkwil1.0\rs485loop.o: ..\Inc\ultrasonic.h

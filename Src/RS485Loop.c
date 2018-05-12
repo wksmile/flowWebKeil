@@ -4,10 +4,15 @@
 #include "stdio.h"
 #include "RS485.h"
 #include "tcpServer.h"
+#include "ultrasonic.h"
 // #include "mySleep.h"
 
+// 注意除了热能表的需要改变频率为2400外，其他的485位9600
 extern UART_HandleTypeDef huart3;
+extern UART_HandleTypeDef huart2;
+extern UART_HandleTypeDef huart1;
 
+// uint8_t status = 0;
 struct HeatData
 {
     float totalFlow;
@@ -15,7 +20,14 @@ struct HeatData
     float temperature;
 };
 
-// 改变波特率为2400,奇校验
+// 3号串口接收中断
+uint8_t receive3[30];
+void open3Receive(){
+    HAL_UART_Receive_IT(&huart3,receive3,1);
+}
+
+
+// 改变波特率为2400,奇校验，8位数据位，1位停止位
 static void uart3_change_baudrate_2400(void)
 {
   huart3.Init.BaudRate = 2400;
@@ -26,7 +38,7 @@ static void uart3_change_baudrate_2400(void)
   }
 }
 
-// 改变波特率为9600，无校验位
+// 改变波特率为9600，无校验位，8位数据位，1位停止位
 static void uart3_change_baudrate_9600(void)
 {
   huart3.Init.BaudRate = 9600;
@@ -86,7 +98,9 @@ unsigned short CRCCodeTest(unsigned char *nData, int wLength)
     return wCRCWord&0xffff;
 }
 // 开启电泵
+// 波特率为9600，无校验位，8位数据位，1位停止位
 // @return {HAL_ERROR} {HAL_TIMEOUT} {HAL_OK}
+// 0x01 0x06 0x20 0x00 0x00 0x05 0x42 0x09
 HAL_StatusTypeDef StartInverter()
 {
     //See EDS1000 manual P121 for detailed instruction format
@@ -99,6 +113,7 @@ HAL_StatusTypeDef StartInverter()
 
 // 关闭电机
 // @return {HAL_ERROR} {HAL_TIMEOUT} {HAL_OK}
+// 0x01, 0x06, 0x20, 0x00, 0x00, 0x06, 0x02, 0x08
 HAL_StatusTypeDef StopInverter()
 {
     //See EDS1000 manual P121 for detailed instruction format
@@ -137,15 +152,16 @@ char vortexData[30];
 // 获取涡街流量计的数据 Triggers a read operation, refresh the flowrate and totalFlowrate，主函数中一直循环每隔一段时间读取涡街流量计的数据
 // @return {HAL_ERROR} {HAL_TIMEOUT} {HAL_OK}
 // #define ADDR_FLOWMETER  0x02
-// 02 04 00 00 00 04 f1 fa
-HAL_StatusTypeDef GetVortexData()
+// CRC检验后的16进制字符02 04 00 00 00 04 f1 fa
+// 返回的数据：02 04 08 00 00 25 00 01 F5 74 41 DA 82
+void GetVortexData()
 {
     unsigned char cmd[8] = {ADDR_FLOWMETER, 0x04, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00};
     unsigned short CRCCode = CRCCodeTest(cmd, 6);
     cmd[6] = CRCCode&0xff;
     cmd[7] = (CRCCode>>8)&0xff;
     // 发送读取涡街流量计的数据
-    return HAL_UART_Transmit(&huart3,cmd,8,100);
+    HAL_UART_Transmit(&huart3,cmd,8,100);
 }
 
 // 解析涡街流量计读取的数据，ret为返回的数据
@@ -201,34 +217,80 @@ float getVortexFlowrate(){
     return _vortexFlowrate;
 }
 
+int flowrate3=0;
+int totalRate3=0;
+char buf3rate[64];
+char buf3total[64];
 // 这个函数应该放在主循环中
-// 普通接收
+// 普通接收涡街流量计
 void loopVortex(){
-    uint8_t vortesData[30];
-    // 发送获取数据成功
-    if(GetVortexData() == HAL_OK) {
-        // 数据接收成功
-        if(HAL_UART_Receive(&huart3,vortesData,30,100) == HAL_OK) {
-            // 接收的数据不为空
-			// char recData[30] = vortesData;
-            if (vortesData[0] != NULL)
+    // uint8_t vortesData[30]={0};
+    
+	// 发送获取数据成功
+	//huart3.RxXferCount = 8;
+	//huart3.pRxBuffPtr = vortesData;
+    GetVortexData();
+    HAL_Delay(200);
+        // 数据接收成功,数据类型如下
+    // 02 04 08 25 01 F5 51 41 3F 12 02 04
+    if(receive3[0]==0x02 && receive3[1]==0x04)
+    {
+        // 接收的数据不为空
+		// char recData[30] = vortesData;
+        // 解析数据,返回0说明解析数据成功
+        if(AnalyVortexData(receive3) == 0){
+            flowrate3 = _vortexFlowrate/1;
+            totalRate3 = _vortexTotalFlow/1;
+
+            // 发送涡街流量计速率
+            sprintf(buf3rate,"add 13,0,%d",flowrate3);
+            uint8_t counterR = 0;
+            while(1)
             {
-                // 解析数据,返回0说明解析数据成功
-                if(AnalyVortexData(vortesData) == 0){
-                    // 如果解析后有_vortexTotalFlow数据
-                    char totalFlowChar[16];
-                    sprintf(totalFlowChar,"%g",_vortexTotalFlow);
-					char totalFlow[25] = "TotalFlow:";
-                    sendData(totalFlow,totalFlowChar,100);
-                    // 发送获取的数据
-                    char flowRateChar[16];
-                    sprintf(flowRateChar,"%g",_vortexFlowrate);
-					char flowRate[25] = "FlowRate:";
-                    sendData(flowRate,flowRateChar,100);
+                if(buf3rate[counterR] == '\0')
+                {
+                    break;
                 }
+                counterR ++;
             }
+            HAL_UART_Transmit(&huart1,(uint8_t *)buf3rate,counterR,0xffff);
+            UART_Send_END();
+
+            // 发送涡街流量计总流量
+            sprintf(buf3total,"add 13,1,%d",totalRate3);
+            uint8_t counterTotal = 0;
+            while(1)
+            {
+                if(buf3total[counterTotal] == '\0')
+                {
+                    break;
+                }
+                counterTotal ++;
+            }
+            HAL_UART_Transmit(&huart1,(uint8_t *)buf3total,counterTotal,0xffff);
+            UART_Send_END();
+
+            /* 发送到wifi模块
+            // 如果解析后有_vortexTotalFlow数据
+            char totalFlowChar[16];
+            sprintf(totalFlowChar,"%g",_vortexTotalFlow);
+    		char totalFlow[25] = "TotalFlow:";
+            sendData(totalFlow,totalFlowChar,100);
+            // 发送获取的数据
+            char flowRateChar[16];
+            sprintf(flowRateChar,"%g",_vortexFlowrate);
+    		char flowRate[25] = "FlowRate:";
+            sendData(flowRate,flowRateChar,100);
+            */
         }
     }
+    // 复原串口3
+    for(int i=0;i<30;i++)
+    {
+        receive3[i] = 0;
+    }
+    huart3.RxXferCount = 30;
+    huart3.pRxBuffPtr = receive3;
 }
 
 // 这个函数应该放在主循环中
@@ -284,7 +346,8 @@ void loopVortex(){
 char heatMeterRxBuffer[100];
 // 读取热能表的数据
 // @return {HAL_ERROR} {HAL_TIMEOUT} {HAL_OK}
-HAL_StatusTypeDef ReadHeatMeter()
+// 计算完成后cmd的指令为0x68,  0x20,  0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa,  0x01,  0x03,  0x1f, 0x90, 0x23,  0x04,  0x16
+HAL_StatusTypeDef readHeatMeter()
 {
     int i = 0;
     //   See CJ/T 188-2004 for M-Bus standatds
@@ -298,10 +361,10 @@ HAL_StatusTypeDef ReadHeatMeter()
     }
 
     // Set baudrate to 2400, EVEN parity, for M-Bus设置波特率2400,奇校验
-    uart3_change_baudrate_2400();
+    // uart3_change_baudrate_2400();
 
     HAL_Delay(10);
-    return HAL_UART_Transmit(&huart3,cmd,16,100);
+    return HAL_UART_Transmit(&huart3,cmd,sizeof(cmd),100);
 }
 
 // 解析热能表的数据   ret热能表读取的数据结果
@@ -345,7 +408,7 @@ char heatMeterData[100];
 
 void loopHeatMeter(){
     uint8_t meterData[100];
-    if(ReadHeatMeter() == HAL_OK) {
+    if(readHeatMeter() == HAL_OK) {
         if(HAL_UART_Receive(&huart3,meterData,100,100) == HAL_OK) {
             if(meterData[0] != NULL){
                 // uint8_t ret[100] = heatMeterData;

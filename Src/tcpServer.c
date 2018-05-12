@@ -7,6 +7,7 @@
 #include "tcpServer.h"
 #include "IOControl.h"
 
+extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart4;
 extern UART_HandleTypeDef huart5;
 
@@ -33,6 +34,12 @@ void sendDataIT(char key[],char value[]){
 void sendData(char key[],char value[],uint8_t timeout){
 	strcat(key, value);
 	HAL_UART_Transmit(&huart4,(uint8_t *)key,strlen(key),timeout);
+}
+
+// 发送数据到触摸屏
+void sendDataTouchScreen(char key[],char value[],uint8_t timeout){
+    strcat(key, value);
+    HAL_UART_Transmit(&huart2,(uint8_t *)key,strlen(key),timeout);
 }
 
 /*
@@ -144,6 +151,21 @@ void SLOT_ProcessSensorData()
     }
 }   */
 
+
+// 提取'{  }'中的字符
+/*
+#include "stdio.h"
+int main()
+{
+    char a[] ="ghf12hj4) i love chi)na.(123 i love china.[12] i love china.";
+    int x,i,k;
+    char buf[52];
+    sscanf(a, "%*[^(](%[^)]s", buf);
+    printf("%s\n",buf);
+    return 0;
+}  */
+
+
 // 解析客户端命令,注意命令大小写
 void SLOT_TCPdecoder(uint8_t receiveData[]){
 	char s[2] = "=";
@@ -197,10 +219,30 @@ void SLOT_TCPdecoder(uint8_t receiveData[]){
 	//}
 }
 
-uint8_t *wifiRxBuffer;
+uint8_t wifiRxBuffer[250];
 // 打开wifi模块接收中断
 void wifiStartListening() {
-	HAL_UART_Receive_IT(&huart4,wifiRxBuffer,250);
+	HAL_UART_Receive_IT(&huart4,wifiRxBuffer,1);
+}
+
+
+// 检查dataArr字符串是否包含'{ }'这种格式，包含返回1，不包含返回0；
+uint8_t *checkIsMatch(uint8_t dataArr[]){
+    int isMatchLeft = 0;
+    int isMatchRight = 0;
+    int i=0;   // 数组索引
+    uint8_t result[10];
+    int flag=0;
+    while(dataArr[i]){
+        if(dataArr[i]=='{'){
+            flag=1;
+        } else if(dataArr[i]=='}'){
+            return result;
+        } else if(flag == 1) {
+            result[i]=dataArr[i];
+        }
+    }
+    return 0;
 }
 
 // 循环查询wifi模块是否接收到数据
@@ -208,10 +250,12 @@ void wifiDataReceived() {
 	if(huart4.RxXferCount < 250) {
         //unsigned char numOfBuffer;
 		//numOfBuffer = 250-huart4.RxXferCount;   // 实际接收到的字符总数
-		uint8_t *wifiData = wifiRxBuffer;
+		// 这里应该解析到完整指令然后才开始进入中断 判断是不是{...}这种格式
 		// 这里发送到单片机去解析数据
-        SLOT_TCPdecoder(wifiData);
-		huart5.RxXferCount = 250;
-		huart5.pRxBuffPtr = wifiRxBuffer;
+        if(checkIsMatch(wifiRxBuffer)){
+            SLOT_TCPdecoder(wifiRxBuffer);
+            huart4.RxXferCount = 250;
+            huart4.pRxBuffPtr = wifiRxBuffer;
+        }
 	}
 }

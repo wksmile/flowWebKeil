@@ -19,6 +19,8 @@ HAL_StatusTypeDef StartInverter(void);
 HAL_StatusTypeDef StopInverter(void);
 HAL_StatusTypeDef SetInverterFreq(float freq);
 
+HAL_StatusTypeDef readHeatMeter(void);
+
 // 获取涡街流量计总的流量
 float getVortexTotalFlow(void);
 // 获取涡街流量计总的速率

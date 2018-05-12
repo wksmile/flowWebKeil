@@ -67,3 +67,5 @@ void WIFI_setParameter(char* SSID, char* PassWord,char* ServerAddress)
 //HAL_GPIO_WritePin(GPIOD,GPIO_PIN_0,GPIO_PIN_SET);
 //  HAL_Delay(500);
 //  WIFI_setParameter("TP-LINK_5D08", "00000000","192.168.1.105");    ÔÚÖ÷º¯ÊýÖÐµ÷ÓÃ
+
+// 网页的wifi控制打开在192.168.1.1中找到wifi模块连接的内网ip，设置的socka的服务器地址是

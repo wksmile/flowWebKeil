@@ -56,3 +56,4 @@ GPIO_PinState getRelayState(int n){
              return HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_7);
     }
 }
+

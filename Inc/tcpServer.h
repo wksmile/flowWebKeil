@@ -7,6 +7,9 @@ void sendDataIT(char key[],char value[]);
 // 普通发送数据，timeout一般设为100ms
 void sendData(char key[],char value[],uint8_t timeout);
 
+// 发送数据到触摸屏
+void sendDataTouchScreen(char key[],char value[],uint8_t timeout);
+
 // 解析客户端命令,注意命令大小写
 void SLOT_TCPdecoder(uint8_t receiveData[]);
 

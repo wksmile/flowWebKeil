@@ -7,7 +7,7 @@
 
 //Entry for reading Electronic Weight
     //Return -100.00 means error
-HAL_StatusTypeDef GetWeightValue(void);
+void GetWeightValue(void);
 
 float analyWeightValue(uint8_t rawData[20]);
 

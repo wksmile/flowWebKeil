@@ -46,20 +46,22 @@
 #include "RS485.h"
 #include "tcpServer.h"
 #include "elecWeight.h"
+#include "ultrasonic.h"
+#include "test.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
 
 SPI_HandleTypeDef hspi2;
 
-TIM_HandleTypeDef htim2;
-
 UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart5;
 UART_HandleTypeDef huart7;
+UART_HandleTypeDef huart8;
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
+UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -76,7 +78,8 @@ static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_UART7_Init(void);
-static void MX_TIM2_Init(void);
+static void MX_USART6_UART_Init(void);
+static void MX_UART8_Init(void);
 static void MX_NVIC_Init(void);
 
 /* USER CODE BEGIN PFP */
@@ -85,43 +88,66 @@ static void MX_NVIC_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-char *strcat(char *dest, const char *src);
 
-uint8_t aRxBuffer[20];
-uint8_t sendData7 = 'R';
-char receive[20];
+UART_HandleTypeDef huart4;
 
-void loop(){
-  // 循环发�?�读取电子秤数据到tcp服务�?
-	uint8_t numOfBuffer;
-	if(huart7.RxXferCount < 20) {
-		numOfBuffer = 20-huart7.RxXferCount;   // Êµ¼Ê½ÓÊÕµ½µÄ×Ö·û×ÜÊý
-		HAL_UART_Transmit(&huart4,aRxBuffer,sizeof(aRxBuffer),100);
-		// ½«aRxBufferÇå¿Õ
-		for(int i=0;i<20;i++){
-			aRxBuffer[i] = NULL;
-		}
-		huart7.RxXferCount = 20;
-		huart7.pRxBuffPtr = aRxBuffer;
-		//HAL_UART_Transmit_IT(&huart7, &sendData7, sizeof(sendData7));
-	}
+#define WIFIRESET(X) HAL_GPIO_WritePin(GPIOD,GPIO_PIN_0,(GPIO_PinState)X)
+#define WIFIUART huart4
+
+void WIFI_UARTSend(char* data, uint16_t len)
+{
+        HAL_UART_Transmit(&WIFIUART,(uint8_t*)data, len,100);
 }
 
-void test(){
-	uint8_t numOfBuffer;
-	if(huart7.RxXferCount < 20) {
-		numOfBuffer = 20-huart7.RxXferCount;   // Êµ¼Ê½ÓÊÕµ½µÄ×Ö·û×ÜÊý
-		strcat(receive," -receive");
-		HAL_UART_Transmit(&huart7,(uint8_t *)receive,sizeof(receive),100);
-		HAL_Delay(500);
-		// ½«aRxBufferÇå¿Õ
-		for(int i=0;i<20;i++){
-			receive[i] = NULL;
-		}
-		huart7.RxXferCount = 20;
-		huart7.pRxBuffPtr = (uint8_t*)receive;
-		//HAL_UART_Transmit(&huart7, &sendData7, sizeof(sendData7));
-	}
+void WIFI_UARTSendString(char* stringD)
+{
+        uint16_t counter = 0;
+        while(1)
+        {
+                if(*(stringD + counter) == '\0' || counter >= 100) break;
+                counter++;
+        }
+
+        WIFI_UARTSend(stringD, counter);
+}
+
+
+void WIFI_ResetWIFI()
+{
+        WIFIRESET(0);
+        HAL_Delay(100);
+        WIFIRESET(1);
+}
+
+void WIFI_setParameter(char* SSID, char* PassWord,char* ServerAddress)
+{
+        char CR = 0x0d;
+
+        WIFI_UARTSendString("+++");
+        HAL_Delay(500);
+        WIFI_UARTSendString("a");
+        HAL_Delay(500);
+
+        WIFI_UARTSendString("AT+WMODE=STA");
+        WIFI_UARTSend(&CR,1);
+        HAL_Delay(500);
+
+        WIFI_UARTSendString("AT+WSTA=");
+        WIFI_UARTSendString(SSID);
+        WIFI_UARTSendString(",");
+        WIFI_UARTSendString(PassWord);
+        WIFI_UARTSend(&CR,1);
+        HAL_Delay(500);
+
+        WIFI_UARTSendString("AT+SOCKA=TCPC,");
+        WIFI_UARTSendString(ServerAddress);
+        WIFI_UARTSendString(",8899");
+        WIFI_UARTSend(&CR,1);
+        HAL_Delay(500);
+
+        WIFI_UARTSendString("AT+Z");
+        WIFI_UARTSend(&CR,1);
+        HAL_Delay(500);
 }
 
 /* USER CODE END 0 */
@@ -130,7 +156,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+	
+  uint8_t aRxBuffer[20];
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -158,7 +185,8 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
   MX_UART7_Init();
-  MX_TIM2_Init();
+  MX_USART6_UART_Init();
+  MX_UART8_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -169,37 +197,60 @@ HAL_GPIO_WritePin(GPIOD,GPIO_PIN_0,GPIO_PIN_SET);
 
 HAL_Delay(500);
 
-//WIFI_setParameter("433_123", "433433433","192.168.1.105");
+  //WIFI_setParameter("123", "12345678","192.168.1.122");
 
 // WIFI_setParameter("TP-LINK_5D08", "00000000","192.168.1.101");
 //uint8_t weightRxBuffer[20];
-//HAL_UART_Receive_IT(&huart7,weightRxBuffer,20);
+uint8_t testBufer1[20];
 
 //HAL_UART_Transmit_IT(&huart7,&sendData7,sizeof(sendData7));
 
-// HAL_UART_Receive_IT(&huart7,aRxBuffer,20);
+// HAL_UART_Receive_IT(&huart2,aRxBuffer,20);
 //uint8_t bRxBuffer[20] = {'R'};
 
-uint8_t sendData9[] = {"send\n"};
+open1Receive();
+open2Receive();
+open7Receive();
+open5Receive();
+open3Receive();
+
+UART_Send_start();
+UART_Change_Page();
+
+// open wifi receive IT
+wifiStartListening();
+
+char sendData9[] = {'s','e','n','d'};
+uint8_t recievecahr;
+char cmd[] = {'R'};
+uint8_t buf[] = {"add 13,0,30"};
+uint8_t testSend = 0x55;
+
+// produce cJSON
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
   while (1)
   {
-	//loop();
-	//HAL_UART_Transmit(&huart4,sendData9,sizeof(sendData9),100);
-	//HAL_UART_Transmit(&huart7,&sendData7,sizeof(sendData7),100);
-    loopWeight();
-  	HAL_Delay(500);
-	//HAL_UART_Receive(&huart7,aRxBuffer,sizeof(aRxBuffer),100);
-	//loop();
+  // WIFI_setParameter("123", "12345678","192.168.1.122");
+  //HAL_UART_Receive(&huart7,aRxBuffer,sizeof(aRxBuffer),100);
+	  
+	//  HAL_UART_Transmit(&WIFIUART,(uint8_t*)buf,sizeof(buf),100);
+	//  HAL_Delay(1500);
+    // dataCurve();
+	  
+	  HAL_UART_Transmit(&WIFIUART,(uint8_t*)buf,sizeof(buf),100);
+	 HAL_Delay(500);
+	  // wifiDataReceived();
+// HAL_UART_Transmit(&WIFIUART,&testSend,2,100);
+	//readHeatMeter();
 	  
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-	 
   }
   /* USER CODE END 3 */
 
@@ -222,13 +273,14 @@ void SystemClock_Config(void)
 
     /**Initializes the CPU, AHB and APB busses clocks 
     */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = 16;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 25;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+  RCC_OscInitStruct.PLL.PLLM = 16;
   RCC_OscInitStruct.PLL.PLLN = 216;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
   RCC_OscInitStruct.PLL.PLLQ = 2;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -244,28 +296,27 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
 
   PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_USART2
-                              |RCC_PERIPHCLK_USART3|RCC_PERIPHCLK_UART4
-                              |RCC_PERIPHCLK_UART5|RCC_PERIPHCLK_UART7;
+                              |RCC_PERIPHCLK_USART3|RCC_PERIPHCLK_USART6
+                              |RCC_PERIPHCLK_UART4|RCC_PERIPHCLK_UART5
+                              |RCC_PERIPHCLK_UART7|RCC_PERIPHCLK_UART8;
   PeriphClkInitStruct.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
   PeriphClkInitStruct.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
   PeriphClkInitStruct.Usart3ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
   PeriphClkInitStruct.Uart4ClockSelection = RCC_UART4CLKSOURCE_PCLK1;
   PeriphClkInitStruct.Uart5ClockSelection = RCC_UART5CLKSOURCE_PCLK1;
+  PeriphClkInitStruct.Usart6ClockSelection = RCC_USART6CLKSOURCE_PCLK2;
   PeriphClkInitStruct.Uart7ClockSelection = RCC_UART7CLKSOURCE_PCLK1;
+  PeriphClkInitStruct.Uart8ClockSelection = RCC_UART8CLKSOURCE_PCLK1;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
-
-    /**Enables the Clock Security System 
-    */
-  HAL_RCC_EnableCSS();
 
     /**Configure the Systick interrupt time 
     */
@@ -283,6 +334,9 @@ void SystemClock_Config(void)
 */
 static void MX_NVIC_Init(void)
 {
+  /* UART4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(UART4_IRQn, 2, 0);
+  HAL_NVIC_EnableIRQ(UART4_IRQn);
   /* USART3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(USART3_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(USART3_IRQn);
@@ -295,12 +349,9 @@ static void MX_NVIC_Init(void)
   /* UART7_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(UART7_IRQn, 4, 0);
   HAL_NVIC_EnableIRQ(UART7_IRQn);
-  /* UART4_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(UART4_IRQn, 2, 0);
-  HAL_NVIC_EnableIRQ(UART4_IRQn);
-  /* TIM2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(TIM2_IRQn, 6, 0);
-  HAL_NVIC_EnableIRQ(TIM2_IRQn);
+  /* USART1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(USART1_IRQn);
 }
 
 /* SPI2 init function */
@@ -323,39 +374,6 @@ static void MX_SPI2_Init(void)
   hspi2.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
   hspi2.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
   if (HAL_SPI_Init(&hspi2) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-}
-
-/* TIM2 init function */
-static void MX_TIM2_Init(void)
-{
-
-  TIM_ClockConfigTypeDef sClockSourceConfig;
-  TIM_MasterConfigTypeDef sMasterConfig;
-
-  htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 4200;
-  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 199;
-  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
@@ -425,13 +443,34 @@ static void MX_UART7_Init(void)
 
 }
 
+/* UART8 init function */
+static void MX_UART8_Init(void)
+{
+
+  huart8.Instance = UART8;
+  huart8.Init.BaudRate = 115200;
+  huart8.Init.WordLength = UART_WORDLENGTH_7B;
+  huart8.Init.StopBits = UART_STOPBITS_1;
+  huart8.Init.Parity = UART_PARITY_NONE;
+  huart8.Init.Mode = UART_MODE_TX_RX;
+  huart8.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart8.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart8.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart8.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart8) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+}
+
 /* USART1 init function */
 static void MX_USART1_UART_Init(void)
 {
 
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
-  huart1.Init.WordLength = UART_WORDLENGTH_7B;
+  huart1.Init.BaudRate = 9600;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
   huart1.Init.Mode = UART_MODE_TX_RX;
@@ -451,15 +490,17 @@ static void MX_USART2_UART_Init(void)
 {
 
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
-  huart2.Init.WordLength = UART_WORDLENGTH_7B;
+  huart2.Init.BaudRate = 9600;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
   huart2.Init.Mode = UART_MODE_TX_RX;
   huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-  huart2.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  huart2.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_ENABLE;
+  huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_RXOVERRUNDISABLE_INIT|UART_ADVFEATURE_DMADISABLEONERROR_INIT;
+  huart2.AdvancedInit.OverrunDisable = UART_ADVFEATURE_OVERRUN_DISABLE;
+  huart2.AdvancedInit.DMADisableonRxError = UART_ADVFEATURE_DMA_DISABLEONRXERROR;
   if (HAL_UART_Init(&huart2) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
@@ -482,6 +523,27 @@ static void MX_USART3_UART_Init(void)
   huart3.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
   huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
   if (HAL_UART_Init(&huart3) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+}
+
+/* USART6 init function */
+static void MX_USART6_UART_Init(void)
+{
+
+  huart6.Instance = USART6;
+  huart6.Init.BaudRate = 115200;
+  huart6.Init.WordLength = UART_WORDLENGTH_7B;
+  huart6.Init.StopBits = UART_STOPBITS_1;
+  huart6.Init.Parity = UART_PARITY_NONE;
+  huart6.Init.Mode = UART_MODE_TX_RX;
+  huart6.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart6.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart6.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart6.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart6) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
@@ -551,7 +613,12 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-/* USART3 init function BAUD is 2400 æ³¢ç‰¹ç�??2400ï¼Œå¥‡æ ¡éª�?*/
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	UNUSED(huart);	
+	handleRxCpltCallback(huart);
+}
 
 /* USER CODE END 4 */
 

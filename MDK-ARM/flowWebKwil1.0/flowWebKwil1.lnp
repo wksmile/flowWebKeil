@@ -26,6 +26,7 @@
 "flowwebkwil1.0\rs485loop.o"
 "flowwebkwil1.0\tcpserver.o"
 "flowwebkwil1.0\ultrasonic.o"
+"flowwebkwil1.0\test.o"
 --library_type=microlib --strict --scatter "flowWebKwil1.0\flowWebKwil1.sct"
 --diag_suppress=L6329 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
