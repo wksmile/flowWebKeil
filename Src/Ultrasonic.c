@@ -9,19 +9,43 @@ extern UART_HandleTypeDef huart5;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart1;
 
+//外部使用的超声波液位计距离,单位毫米
+int uDistance=0;
+// 外部获取的超声波液位计的温度,单位摄氏度
+float uTemperature=0;
+// 外部获取的超声波液位计的时间，单位微秒
+int uTime=0;
+
+//获得超声波液位计测量距离
+int getUlDistance()
+{
+    return uDistance;
+}
+
+// 获取超声波液位计的温度
+float getUlTemperature()
+{
+    return uTemperature;
+}
+
+// 外部获取超声波液位计时间
+int getUlTime()
+{
+    return uTime;
+}
+
 uint8_t receive5[5];
 // 打开5号串口接收中断
 // 调试的时候Rx接串口的Tx，Tx接串口的Rx
 // 这里5改为1了
 void open5Receive(){
-    HAL_UART_Receive_IT(&huart5,receive5,1);
+    HAL_UART_Receive_IT(&huart5,receive5,5);
 }
 
 // 返回9位精度数据，按DS18B20格式，范围为 -40~+125 摄氏度，探测耗时约83ms.
 // 发送读取超声波命令的函数   超声波温度
 // 0x01 0x80
 void GetUltraTemperature()
-
 {
     //KS103 instruction structure:
     //0xe8: Address code
@@ -31,7 +55,7 @@ void GetUltraTemperature()
     HAL_UART_Transmit(&huart5,cmd,3,100);
 }
 
-// 解析并返回读取的超声波数据
+// 解析并返回读取的超声波温度数据
 float anaslyUltraTemperature(uint8_t Data[5]){
     int temp;
     //if(Data[0] == NULL) return -100.0f;   // 出错
@@ -59,10 +83,12 @@ int anaslyUltraDistance(uint8_t rawData[5]){
     unsigned int distance;
     // const char cmd[] = {0xe8, 0x02, 0xb4};
     // int numOfBuffer = 5 - huart5.RxXferCount;
-    // if(rawData[0] == NULL) return -1;   // 出错
+    if(rawData[0] == NULL) return -1;   // 出错
     distance = rawData[0];
     distance<<=8;
     distance +=rawData[1];
+    uDistance = distance;
+
     // 将结果毫米量程转化为0~50cm；
     distance = distance*255/(10*50);
     return distance;
@@ -88,7 +114,7 @@ int anaslyUltraTime(uint8_t rawData[5]){
     //0x02: Command register address
     //0x07: Read delay(us), distance_max=700mm
     // int numOfBuffer = 5 - huart5.RxXferCount;
-    // if(rawData[0]==NULL) return -1;   // 出错
+    if(rawData[0]==NULL) return -1;   // 出错
     duration = rawData[0];
     duration<<=8;
     duration +=rawData[1];
@@ -145,9 +171,146 @@ void loopUltra(){
             sendDataTouchScreen(ultrasonic,uTimeChar,100);
 }
 
+char stage=0;
+// 超声波液位计采集数据
+void ultraData()
+{
+    if(stage==0)
+    {
+        // 发送查询距离
+        GetUltraDistance();
+        HAL_Delay(100);
+        stage=1;
+    }
+    if(stage==1)
+    {
+        if(receive5[0]!=0 || receive5[1]!=0)
+        {
+            anaslyUltraDistance(receive5);
+        }
+        for(int i=0;i<5;i++)
+        {
+            receive5[i] = 0;
+        }
+        huart5.RxXferCount = 5;
+        huart5.pRxBuffPtr = receive5;
+        stage=2;
+    }
+    if(stage==2)
+    {
+        // 发送查询温度
+        GetUltraTemperature();
+        HAL_Delay(100);
+        stage=3;
+    }
+    if(stage==3)
+    {
+        if(receive5[0]!=0 || receive5[1]!=0)
+        {
+            uTemperature = anaslyUltraTemperature(receive5);
+        }
+        for(int i=0;i<5;i++)
+        {
+            receive5[i] = 0;
+        }
+        huart5.RxXferCount = 5;
+        huart5.pRxBuffPtr = receive5;
+        stage=4;
+    }
+    if(stage==4)
+    {
+        // 获取超声波时间
+        GetUltraDurationTime();
+        HAL_Delay(100);
+        stage=5;
+    }
+    if(stage==5)
+    {
+        if(receive5[0]!=0 || receive5[1]!=0)
+        {
+            // 把返回的时间比如2186us量程除以10，是的在255之内。
+            uTime = anaslyUltraTime(receive5);
+        }
+        for(int i=0;i<5;i++)
+        {
+            receive5[i] = 0;
+        }
+        huart5.RxXferCount = 5;
+        huart5.pRxBuffPtr = receive5;
+        stage=0;
+    }
+}
+
 char buf5[64];
+// 在触摸屏中画超声波液位计测量的距离曲线
+void drawUltraDistance()
+{
+    if(uDistance!=-1){
+        sprintf(buf5,"add 13,1,%d",uDistance);
+        uint8_t counter = 0;
+        while(1)
+        {
+            if(buf5[counter] == '\0')
+            {
+                break;
+            }
+            counter ++;
+        }
+        HAL_UART_Transmit(&huart1,(uint8_t *)buf5,counter,0xff);
+        UART_Send_END();
+    }
+}
+
 char buf5T[64];
+// 在触摸屏中画超声波液位计测量的温度曲线
+void drawUltraTemperature()
+{
+    int resultTemp = (int)uTemperature;
+    if(resultTemp!=-1){
+        sprintf(buf5T,"add 13,2,%d",resultTemp);
+        uint8_t counterT = 0;
+        while(1)
+        {
+            if(buf5T[counterT] == '\0')
+            {
+                break;
+            }
+            counterT ++;
+        }
+        HAL_UART_Transmit(&huart1,(uint8_t *)buf5T,counterT,0xffff);
+        UART_Send_END();
+    }
+}
+
 char buf5Time[64];
+// 在触摸屏中画超声波液位计测量的超声波时间曲线
+void drawUltraTime()
+{
+    if(uTime!=-1){
+        int resultTime = uTime/20;
+        sprintf(buf5Time,"add 13,3,%d",resultTime);
+        uint8_t counterTime = 0;
+        while(1)
+        {
+            if(buf5Time[counterTime] == '\0')
+            {
+                break;
+            }
+            counterTime ++;
+        }
+        HAL_UART_Transmit(&huart1,(uint8_t *)buf5Time,counterTime,0xffff);
+        UART_Send_END();
+    }
+}
+
+// 超声波液位计曲线绘制
+void drawUltra()
+{
+    drawUltraDistance();
+    drawUltraTemperature();
+    drawUltraTime();
+}
+
 // 检查5号串口接收的数据
 void checkUart5Receive()
 {
@@ -179,117 +342,6 @@ void checkUart5Receive()
         huart5.RxXferCount = 5;
         huart5.pRxBuffPtr = receive5;
         //HAL_UART_Transmit_IT(&huart7, &sendData7, sizeof(sendData7));
-    }
-}
-
-char stage=0;
-void ultraData()
-{
-    if(stage==0)
-    {
-        // 发送查询距离
-        GetUltraDistance();
-        HAL_Delay(100);
-        stage=1;
-    }
-    if(stage==1)
-    {
-        if(receive5[0]!=0 || receive5[1]!=0)
-        {
-            int result = anaslyUltraDistance(receive5);
-            if(result!=-1){
-                sprintf(buf5,"add 13,1,%d",result);
-                uint8_t counter = 0;
-                while(1)
-                {
-                    if(buf5[counter] == '\0')
-                    {
-                        break;
-                    }
-                    counter ++;
-                }
-                HAL_UART_Transmit(&huart1,(uint8_t *)buf5,counter,0xffff);
-                UART_Send_END();
-            }
-        }
-        for(int i=0;i<5;i++)
-        {
-            receive5[i] = 0;
-        }
-        huart5.RxXferCount = 5;
-        huart5.pRxBuffPtr = receive5;
-        stage=2;
-    }
-    if(stage==2)
-    {
-        // 发送查询温度
-        GetUltraTemperature();
-        HAL_Delay(100);
-        stage=3;
-    }
-    if(stage==3)
-    {
-        if(receive5[0]!=0 || receive5[1]!=0)
-        {
-            int resultTemp = (int)anaslyUltraTemperature(receive5);
-            if(resultTemp!=-1){
-                sprintf(buf5T,"add 13,2,%d",resultTemp);
-                uint8_t counterT = 0;
-                while(1)
-                {
-                    if(buf5T[counterT] == '\0')
-                    {
-                        break;
-                    }
-                    counterT ++;
-                }
-                HAL_UART_Transmit(&huart1,(uint8_t *)buf5T,counterT,0xffff);
-                UART_Send_END();
-            }
-        }
-        for(int i=0;i<5;i++)
-        {
-            receive5[i] = 0;
-        }
-        huart5.RxXferCount = 5;
-        huart5.pRxBuffPtr = receive5;
-        stage=4;
-    }
-    if(stage==4)
-    {
-        // 获取超声波时间
-        GetUltraDurationTime();
-        HAL_Delay(100);
-        stage=5;
-    }
-    if(stage==5)
-    {
-        if(receive5[0]!=0 || receive5[1]!=0)
-        {
-            // 把返回的时间比如2186us量程除以10，是的在255之内。
-            int resultTime = anaslyUltraTime(receive5)/20;
-            if(resultTime!=-1){
-                sprintf(buf5Time,"add 13,3,%d",resultTime);
-                uint8_t counterTime = 0;
-                while(1)
-                {
-                    if(buf5Time[counterTime] == '\0')
-                    {
-                        break;
-                    }
-                    counterTime ++;
-                }
-                HAL_UART_Transmit(&huart1,(uint8_t *)buf5Time,counterTime,0xffff);
-                UART_Send_END();
-            }
-        }
-        for(int i=0;i<5;i++)
-        {
-            receive5[i] = 0;
-        }
-        huart5.RxXferCount = 5;
-        huart5.pRxBuffPtr = receive5;
-        stage=0;
     }
 }
 

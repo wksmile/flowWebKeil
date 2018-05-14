@@ -38,3 +38,6 @@ flowwebkwil1.0\tcpserver.o: ..\Inc\RS485.h
 flowwebkwil1.0\tcpserver.o: ..\Inc\tcpServer.h
 flowwebkwil1.0\tcpserver.o: ..\Inc\IOControl.h
 flowwebkwil1.0\tcpserver.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+flowwebkwil1.0\tcpserver.o: ..\Inc\ultrasonic.h
+flowwebkwil1.0\tcpserver.o: ..\Inc\elecWeight.h
+flowwebkwil1.0\tcpserver.o: ..\Inc\cJSON.h

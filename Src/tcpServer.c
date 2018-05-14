@@ -6,10 +6,16 @@
 #include "stm32f7xx_hal_def.h"
 #include "tcpServer.h"
 #include "IOControl.h"
+#include "ultrasonic.h"
+#include "elecWeight.h"
+#include "RS485.h"
+#include "cJSON.h"
 
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart4;
 extern UART_HandleTypeDef huart5;
+
+extern uint8_t wifiRxBuffer[20];
 
 #define OVERFLOW_WEIGHT 20//The maximum weight upper tank could hold. If reach this threshold, pump will sop and valveout will open.
 
@@ -219,11 +225,12 @@ void SLOT_TCPdecoder(uint8_t receiveData[]){
 	//}
 }
 
+/*
 uint8_t wifiRxBuffer[250];
 // 打开wifi模块接收中断
 void wifiStartListening() {
 	HAL_UART_Receive_IT(&huart4,wifiRxBuffer,1);
-}
+}*/
 
 
 // 检查dataArr字符串是否包含'{ }'这种格式，包含返回1，不包含返回0；
@@ -259,3 +266,42 @@ void wifiDataReceived() {
         }
 	}
 }
+
+// produce cJSON
+void sendInstrumentData()
+{
+    cJSON * rootCJSON =  cJSON_CreateObject();
+    cJSON_AddItemToObject(rootCJSON, "type", cJSON_CreateString("data"));
+    cJSON_AddItemToObject(rootCJSON, "ID", cJSON_CreateNumber(1));
+    // 电子秤
+    cJSON_AddItemToObject(rootCJSON, "W1", cJSON_CreateNumber( getWeight() ));
+    // 超声波液位计温度
+    cJSON_AddItemToObject(rootCJSON, "T1", cJSON_CreateNumber( getUlTemperature() ));
+    // 超声波液位计渡越时间
+    cJSON_AddItemToObject(rootCJSON, "U1", cJSON_CreateNumber( getUlTime() ));
+    // 超声波液位计测量距离
+    cJSON_AddItemToObject(rootCJSON, "D1", cJSON_CreateNumber( getUlDistance() ));
+    // 涡街流量计瞬时流量
+    cJSON_AddItemToObject(rootCJSON, "F1", cJSON_CreateNumber( getVortexFlowrate() ));
+    // 涡街流量计累积流量
+    cJSON_AddItemToObject(rootCJSON, "F2", cJSON_CreateNumber( getVortexTotalFlow() ));
+	/*
+    struct HeatData heatData;
+    heatData.currentFlow=1;
+    heatData.totalFlow=2;
+    heatData.temperature=3;
+    热能表瞬时流量
+    cJSON_AddItemToObject(rootCJSON, "F3", cJSON_CreateNumber(heatData.currentFlow));
+    cJSON_AddItemToObject(rootCJSON, "F4", cJSON_CreateNumber(heatData.totalFlow));
+    cJSON_AddItemToObject(rootCJSON, "T2", cJSON_CreateNumber(heatData.temperature));
+	*/
+    cJSON_AddItemToObject(rootCJSON, "V1", cJSON_CreateNumber(getRelayState(1)));
+    cJSON_AddItemToObject(rootCJSON, "V2", cJSON_CreateNumber(getRelayState(2)));
+    cJSON_AddItemToObject(rootCJSON, "V3", cJSON_CreateNumber(getRelayState(3)));
+    cJSON_AddItemToObject(rootCJSON, "I1", cJSON_CreateNumber(50.0));
+
+    char * cJsonTest = cJSON_Print(rootCJSON);
+
+    HAL_UART_Transmit(&huart4,(uint8_t*)cJsonTest,strlen(cJsonTest),0xff);
+}
+

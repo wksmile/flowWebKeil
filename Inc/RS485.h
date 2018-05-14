@@ -13,6 +13,13 @@
 #define ADDR_FLOWMETER  0x02
 #define ADDR_THERMO     0x03
 
+struct HeatData
+{
+    float totalFlow;
+    float currentFlow;
+    float temperature;
+};
+
 #define BCD(data) (10*(((unsigned char)data)>>4) + (((unsigned char)data)&0x0f))
 
 HAL_StatusTypeDef StartInverter(void);
@@ -28,8 +35,15 @@ float getVortexFlowrate(void);
 
 // 涡街流量计读取数据
 void loopVortex(void);
+
+// 画涡街流量计的数据
+void drawVortex(void);
+
 // 热能表读取数据
 void loopHeatMeter(void);
+
+// 获取热能表数据,返回结构体
+struct HeatData getHeatData(void);
 
 // SERIALDEVICES_H
 #endif

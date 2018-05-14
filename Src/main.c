@@ -48,6 +48,8 @@
 #include "elecWeight.h"
 #include "ultrasonic.h"
 #include "test.h"
+#include "cJSON.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -88,67 +90,6 @@ static void MX_NVIC_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-
-UART_HandleTypeDef huart4;
-
-#define WIFIRESET(X) HAL_GPIO_WritePin(GPIOD,GPIO_PIN_0,(GPIO_PinState)X)
-#define WIFIUART huart4
-
-void WIFI_UARTSend(char* data, uint16_t len)
-{
-        HAL_UART_Transmit(&WIFIUART,(uint8_t*)data, len,100);
-}
-
-void WIFI_UARTSendString(char* stringD)
-{
-        uint16_t counter = 0;
-        while(1)
-        {
-                if(*(stringD + counter) == '\0' || counter >= 100) break;
-                counter++;
-        }
-
-        WIFI_UARTSend(stringD, counter);
-}
-
-
-void WIFI_ResetWIFI()
-{
-        WIFIRESET(0);
-        HAL_Delay(100);
-        WIFIRESET(1);
-}
-
-void WIFI_setParameter(char* SSID, char* PassWord,char* ServerAddress)
-{
-        char CR = 0x0d;
-
-        WIFI_UARTSendString("+++");
-        HAL_Delay(500);
-        WIFI_UARTSendString("a");
-        HAL_Delay(500);
-
-        WIFI_UARTSendString("AT+WMODE=STA");
-        WIFI_UARTSend(&CR,1);
-        HAL_Delay(500);
-
-        WIFI_UARTSendString("AT+WSTA=");
-        WIFI_UARTSendString(SSID);
-        WIFI_UARTSendString(",");
-        WIFI_UARTSendString(PassWord);
-        WIFI_UARTSend(&CR,1);
-        HAL_Delay(500);
-
-        WIFI_UARTSendString("AT+SOCKA=TCPC,");
-        WIFI_UARTSendString(ServerAddress);
-        WIFI_UARTSendString(",8899");
-        WIFI_UARTSend(&CR,1);
-        HAL_Delay(500);
-
-        WIFI_UARTSendString("AT+Z");
-        WIFI_UARTSend(&CR,1);
-        HAL_Delay(500);
-}
 
 /* USER CODE END 0 */
 
@@ -197,7 +138,7 @@ HAL_GPIO_WritePin(GPIOD,GPIO_PIN_0,GPIO_PIN_SET);
 
 HAL_Delay(500);
 
-  //WIFI_setParameter("123", "12345678","192.168.1.122");
+//WIFI_setParameter("123", "12345678","192.168.1.122");
 
 // WIFI_setParameter("TP-LINK_5D08", "00000000","192.168.1.101");
 //uint8_t weightRxBuffer[20];
@@ -226,8 +167,20 @@ char cmd[] = {'R'};
 uint8_t buf[] = {"add 13,0,30"};
 uint8_t testSend = 0x55;
 
-// produce cJSON
+    cJSON * rootCJSON =  cJSON_CreateObject();
+    cJSON_AddItemToObject(rootCJSON, "type", cJSON_CreateString("data"));
+    cJSON_AddItemToObject(rootCJSON, "ID", cJSON_CreateNumber(1));
+    cJSON_AddItemToObject(rootCJSON, "W1", cJSON_CreateNumber(20));
+    cJSON_AddItemToObject(rootCJSON, "T1", cJSON_CreateNumber(20));
+    cJSON_AddItemToObject(rootCJSON, "U1", cJSON_CreateNumber(10));
+/*
+    cJSON_AddItemToObject(rootCJSON, "D1", cJSON_CreateNumber(20));
+    cJSON_AddItemToObject(rootCJSON, "F1", cJSON_CreateNumber(5));
+    cJSON_AddItemToObject(rootCJSON, "F2", cJSON_CreateNumber(4));
+*/
 
+	char * cJsonTest = cJSON_Print(rootCJSON);
+	//cJSON_Delete(rootCJSON);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -241,8 +194,13 @@ uint8_t testSend = 0x55;
 	//  HAL_UART_Transmit(&WIFIUART,(uint8_t*)buf,sizeof(buf),100);
 	//  HAL_Delay(1500);
     // dataCurve();
-	  
-	  HAL_UART_Transmit(&WIFIUART,(uint8_t*)buf,sizeof(buf),100);
+	  /*
+	 loopVortex();
+	 loopWeight();
+	  ultraData();
+	  sendInstrumentData();
+	  */
+	 HAL_UART_Transmit(&huart4,(uint8_t*)cJsonTest,strlen(cJsonTest),100);
 	 HAL_Delay(500);
 	  // wifiDataReceived();
 // HAL_UART_Transmit(&WIFIUART,&testSend,2,100);
@@ -616,8 +574,8 @@ static void MX_GPIO_Init(void)
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	UNUSED(huart);	
-	handleRxCpltCallback(huart);
+	//UNUSED(huart);	
+	//handleRxCpltCallback(huart);
 }
 
 /* USER CODE END 4 */

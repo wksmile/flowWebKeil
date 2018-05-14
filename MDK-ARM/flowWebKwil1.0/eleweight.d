@@ -38,3 +38,4 @@ flowwebkwil1.0\eleweight.o: ..\Inc\RS485.h
 flowwebkwil1.0\eleweight.o: ..\Inc\tcpServer.h
 flowwebkwil1.0\eleweight.o: ..\Inc\IOControl.h
 flowwebkwil1.0\eleweight.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+flowwebkwil1.0\eleweight.o: ..\Inc\test.h

@@ -39,3 +39,5 @@ flowwebkwil1.0\main.o: ..\Inc\tcpServer.h
 flowwebkwil1.0\main.o: ..\Inc\elecWeight.h
 flowwebkwil1.0\main.o: ..\Inc\ultrasonic.h
 flowwebkwil1.0\main.o: ..\Inc\test.h
+flowwebkwil1.0\main.o: ..\Inc\cJSON.h
+flowwebkwil1.0\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

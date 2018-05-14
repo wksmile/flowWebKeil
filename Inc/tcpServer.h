@@ -14,10 +14,11 @@ void sendDataTouchScreen(char key[],char value[],uint8_t timeout);
 void SLOT_TCPdecoder(uint8_t receiveData[]);
 
 // 打开wifi模块接收中断
-void wifiStartListening(void);
+// void wifiStartListening(void);
 
 // 循环查询wifi模块是否接收到数据
 void wifiDataReceived(void);
 
+void sendInstrumentData(void);
 // CETHERNETTHREAD_H
 #endif

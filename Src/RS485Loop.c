@@ -12,20 +12,12 @@ extern UART_HandleTypeDef huart3;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart1;
 
-// uint8_t status = 0;
-struct HeatData
-{
-    float totalFlow;
-    float currentFlow;
-    float temperature;
-};
 
 // 3号串口接收中断
 uint8_t receive3[30];
 void open3Receive(){
-    HAL_UART_Receive_IT(&huart3,receive3,1);
+    HAL_UART_Receive_IT(&huart3,receive3,30);
 }
-
 
 // 改变波特率为2400,奇校验，8位数据位，1位停止位
 static void uart3_change_baudrate_2400(void)
@@ -156,10 +148,10 @@ char vortexData[30];
 // 返回的数据：02 04 08 00 00 25 00 01 F5 74 41 DA 82
 void GetVortexData()
 {
-    unsigned char cmd[8] = {ADDR_FLOWMETER, 0x04, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00};
-    unsigned short CRCCode = CRCCodeTest(cmd, 6);
-    cmd[6] = CRCCode&0xff;
-    cmd[7] = (CRCCode>>8)&0xff;
+    unsigned char cmd[8] = {0x02, 0x04, 0x00, 0x00, 0x00, 0x04, 0xf1, 0xfa};
+    //unsigned short CRCCode = CRCCodeTest(cmd, 6);
+    //cmd[6] = CRCCode&0xff;
+    //cmd[7] = (CRCCode>>8)&0xff;
     // 发送读取涡街流量计的数据
     HAL_UART_Transmit(&huart3,cmd,8,100);
 }
@@ -217,12 +209,8 @@ float getVortexFlowrate(){
     return _vortexFlowrate;
 }
 
-int flowrate3=0;
-int totalRate3=0;
-char buf3rate[64];
-char buf3total[64];
 // 这个函数应该放在主循环中
-// 普通接收涡街流量计
+// 涡街流量计采集数据
 void loopVortex(){
     // uint8_t vortesData[30]={0};
     
@@ -238,51 +226,7 @@ void loopVortex(){
         // 接收的数据不为空
 		// char recData[30] = vortesData;
         // 解析数据,返回0说明解析数据成功
-        if(AnalyVortexData(receive3) == 0){
-            flowrate3 = _vortexFlowrate/1;
-            totalRate3 = _vortexTotalFlow/1;
-
-            // 发送涡街流量计速率
-            sprintf(buf3rate,"add 13,0,%d",flowrate3);
-            uint8_t counterR = 0;
-            while(1)
-            {
-                if(buf3rate[counterR] == '\0')
-                {
-                    break;
-                }
-                counterR ++;
-            }
-            HAL_UART_Transmit(&huart1,(uint8_t *)buf3rate,counterR,0xffff);
-            UART_Send_END();
-
-            // 发送涡街流量计总流量
-            sprintf(buf3total,"add 13,1,%d",totalRate3);
-            uint8_t counterTotal = 0;
-            while(1)
-            {
-                if(buf3total[counterTotal] == '\0')
-                {
-                    break;
-                }
-                counterTotal ++;
-            }
-            HAL_UART_Transmit(&huart1,(uint8_t *)buf3total,counterTotal,0xffff);
-            UART_Send_END();
-
-            /* 发送到wifi模块
-            // 如果解析后有_vortexTotalFlow数据
-            char totalFlowChar[16];
-            sprintf(totalFlowChar,"%g",_vortexTotalFlow);
-    		char totalFlow[25] = "TotalFlow:";
-            sendData(totalFlow,totalFlowChar,100);
-            // 发送获取的数据
-            char flowRateChar[16];
-            sprintf(flowRateChar,"%g",_vortexFlowrate);
-    		char flowRate[25] = "FlowRate:";
-            sendData(flowRate,flowRateChar,100);
-            */
-        }
+        AnalyVortexData(receive3);
     }
     // 复原串口3
     for(int i=0;i<30;i++)
@@ -291,6 +235,60 @@ void loopVortex(){
     }
     huart3.RxXferCount = 30;
     huart3.pRxBuffPtr = receive3;
+}
+
+// 画涡街流量计的数据
+void drawVortex()
+{
+    int flowrate3=0;
+    int totalRate3=0;
+    char buf3rate[64];
+    char buf3total[64];
+    // 转化为整数
+    flowrate3 = _vortexFlowrate/1;
+    // 转化为整数
+    totalRate3 = _vortexTotalFlow/1;
+
+    // 发送涡街流量计速率
+    sprintf(buf3rate,"add 13,0,%d",flowrate3);
+    uint8_t counterR = 0;
+    while(1)
+    {
+        if(buf3rate[counterR] == '\0')
+        {
+            break;
+        }
+        counterR ++;
+    }
+    HAL_UART_Transmit(&huart1,(uint8_t *)buf3rate,counterR,0xffff);
+    UART_Send_END();
+
+    // 发送涡街流量计总流量
+    sprintf(buf3total,"add 13,1,%d",totalRate3);
+    uint8_t counterTotal = 0;
+    while(1)
+    {
+        if(buf3total[counterTotal] == '\0')
+        {
+            break;
+        }
+        counterTotal ++;
+    }
+    HAL_UART_Transmit(&huart1,(uint8_t *)buf3total,counterTotal,0xffff);
+    UART_Send_END();
+
+    /* 发送到wifi模块
+    // 如果解析后有_vortexTotalFlow数据
+    char totalFlowChar[16];
+    sprintf(totalFlowChar,"%g",_vortexTotalFlow);
+    char totalFlow[25] = "TotalFlow:";
+    sendData(totalFlow,totalFlowChar,100);
+    // 发送获取的数据
+    char flowRateChar[16];
+    sprintf(flowRateChar,"%g",_vortexFlowrate);
+    char flowRate[25] = "FlowRate:";
+    sendData(flowRate,flowRateChar,100);
+    */
 }
 
 // 这个函数应该放在主循环中
@@ -406,6 +404,7 @@ int heatMetweState=0;
 // vortex接收中断的数据
 char heatMeterData[100];
 
+struct HeatData HeatMeterData;
 void loopHeatMeter(){
     uint8_t meterData[100];
     if(readHeatMeter() == HAL_OK) {
@@ -413,8 +412,9 @@ void loopHeatMeter(){
             if(meterData[0] != NULL){
                 // uint8_t ret[100] = heatMeterData;
                 // 解析热能表数据
-                struct HeatData HeatMeterData = AnanlyReadHeatMeterData(meterData);
+                HeatMeterData = AnanlyReadHeatMeterData(meterData);
                 // 发送数据
+                /*
                 if(HeatMeterData.currentFlow>=0){
                     char flowChar[16]={0};
                     sprintf(flowChar,"%g",HeatMeterData.currentFlow);
@@ -430,9 +430,16 @@ void loopHeatMeter(){
                     sprintf(flowTotal,"%g",HeatMeterData.totalFlow);
                     sendData("TotalFlowHM:",flowTotal,100);
                 }
+                */
             }
         }
     }
+}
+
+// 获取热能表数据
+struct HeatData getHeatData()
+{
+    return HeatMeterData;
 }
 
 

@@ -5,8 +5,10 @@
 #include "RS485.h"
 #include "IOControl.h"
 #include "tcpServer.h"
+#include "test.h"
 
 extern UART_HandleTypeDef huart7;
+extern UART_HandleTypeDef huart1;
 
 // 电子秤的超重重量
 #define OVERFLOW_WEIGHT 20
@@ -32,6 +34,10 @@ void weightAndUltraDataReceived() {
     }
 }   */
 
+extern char receive7[20];
+
+float weight=0;
+
 // 发送获取电子秤重量指令
 // @return {HAL_ERROR} {HAL_TIMEOUT} {HAL_OK}
 // HAL_StatusTypeDef 类型
@@ -44,21 +50,21 @@ void GetWeightValue()
     // tcflush(fdSerialWeight, TCIFLUSH);
     //Send read command
     uint8_t cmd[] = {'R'};
-    HAL_UART_Transmit(&huart7,cmd,2,100);
+    HAL_UART_Transmit(&huart7,cmd,sizeof(cmd),0xff);
 }
 
 // 解析电子秤获取的重量
-float analyWeightValue(uint8_t rawData[20]){
+float analyWeightValue(int8_t *rawData){
     float weight = 0;
+    if(rawData[0]!='w' && rawData[1]!='w')return -100;//Error...
+    /*
     rawData[3]-='0';
     rawData[4]-='0';
     rawData[5]-='0';
     rawData[7]-='0';
     rawData[8]-='0';
-    weight = rawData[3]*100.0f + rawData[4]*10.0f + rawData[5]*1.0f + rawData[7]*0.10f + rawData[8]*0.01f;
-    if(rawData[2]=='-')weight = -weight;
-
-    if(rawData[0]!='w' || rawData[1]!='w')return -100.0f;//Error...
+    */
+    weight = (rawData[3]-0x30)*100.0f + (rawData[4]-0x30)*10.0f + (rawData[5]-0x30)*1.0f + (rawData[7]-0x30)*0.10f + (rawData[8]-0x30)*0.01f;
     // 超过最大重量，关闭电机，打开下水阀
     if(weight > 20) {
         // 关闭电机
@@ -71,25 +77,62 @@ float analyWeightValue(uint8_t rawData[20]){
 
 // 循环获取电子秤的重量
 void loopWeight() {
-    uint8_t weightData[20];
 	GetWeightValue();
-	HAL_Delay(500);
-    HAL_UART_Receive(&huart7,weightData,20,100);
-    if(weightData[0] != NULL){
+	HAL_Delay(100);
+    float innerWeight;
+    //HAL_UART_Receive(&huart7,weightData,20,100);
+    if(receive7[0] != 0){
+        // innerWeight可能为-100；
+        innerWeight=analyWeightValue((int8_t *)receive7);
+        if(innerWeight!=-100) weight=innerWeight;
+        for(int i=0;i<20;i++)
+        {
+            receive7[i] = 0;
+        }
+        //huart7.RxXferCount = 20;
+        //huart7.pRxBuffPtr = receive7;
         // char ret[20] = *weightData;
-        float receivWeight = analyWeightValue(weightData);
+        /*
+        float receivWeight = analyWeightValue(receive7);
 
         char weightChar[10];
         sprintf(weightChar,"%g",receivWeight);
 		char weight[15] = "Weight:";
         sendData(weight,weightChar,100);
+        */
     }
+	open7Receive();
 }
 
 // 电子秤清零
-HAL_StatusTypeDef SetWeightZero()
+void SetWeightZero()
 {
-    uint8_t cmd[] = {'Z'};
-    return HAL_UART_Transmit(&huart7,cmd,2,100);
+    uint8_t zmd[] = {'Z'};
+    HAL_UART_Transmit(&huart7,zmd,2,100);
 }
 
+float getWeight()
+{
+    return weight;
+}
+
+char bufWeight[64];
+// 画电子秤的曲线
+void drawWeight()
+{
+    int dealRcvBuf;
+    // 转化量程为0-250
+    dealRcvBuf = (int)weight*5;
+    sprintf(bufWeight,"add 13,0,%d",dealRcvBuf);
+    uint8_t counter = 0;
+    while(1)
+    {
+        if(bufWeight[counter] == '\0')
+        {
+            break;
+        }
+        counter ++;
+    }
+    HAL_UART_Transmit(&huart1,(uint8_t *)bufWeight,counter,0xffff);
+    UART_Send_END();
+}

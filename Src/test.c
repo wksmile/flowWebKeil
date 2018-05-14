@@ -46,13 +46,19 @@ void loop(){
 	}
 }  */
 
+uint8_t wifiRxBuffer[20];
+// 打开wifi模块接收中断
+void wifiStartListening() {
+	HAL_UART_Receive_IT(&huart4,wifiRxBuffer,1);
+}
+
 // 2号串口
 void open2Receive(){
 	HAL_UART_Receive_IT(&huart2,(uint8_t *)receive,1);
 }
 
 void open7Receive(){
-	HAL_UART_Receive_IT(&huart7,(uint8_t *)receive7,1);
+	HAL_UART_Receive_IT(&huart7,(uint8_t *)receive7,20);
 }
 
 void open1Receive(){
@@ -283,6 +289,11 @@ static uint16_t RcvBufLen = 0;
 uint8_t RcvBuf[20];
 static uint8_t flag_uartbegin;
 
+// wifi定义变量
+static uint16_t WifiBufLen = 0;
+uint8_t WifiBuf[20];
+static uint8_t flag_wifibegin;
+
 static uint16_t RcvBufLen3 = 0;
 uint8_t RcvBuf3[20];
 
@@ -296,7 +307,8 @@ char buf[64];
 // 2 涡街流量计
 // 3 热能表
 char state=0;
-
+// 电子称的额重量（kg）
+int weightTest=0;
 HAL_StatusTypeDef maStatus;
 uint8_t start_error[] = "start error";
 uint8_t stop_error[] = "stop error";
@@ -349,7 +361,7 @@ void handleRxCpltCallback(UART_HandleTypeDef *huart){
 		if(RcvBufLen3>=20) RcvBufLen3=0;
 		HAL_UART_Receive_IT(&huart3,receive3,1);
 	}
-	// 电子秤接收到数据
+	// 电子秤接收到数据,这里还要改回来，改为&huart7
 	if (huart == &huart7)
 	{
 		if (RcvBufLen == 0 &&  receive7[0]=='w')
@@ -378,6 +390,7 @@ void handleRxCpltCallback(UART_HandleTypeDef *huart){
 		{
 			// 重置为开始状态
 			flag_uartbegin = 0;
+			weightTest=(int)RcvBuf;
 			uint32_t dealRcvBuf = ridOfZero(RcvBuf);
 			sprintf(buf,"add 13,0,%d",dealRcvBuf);
 			uint8_t counter = 0;
@@ -394,11 +407,40 @@ void handleRxCpltCallback(UART_HandleTypeDef *huart){
 			RcvBufLen = 0;
 		}
 		HAL_UART_Receive_IT(huart,(uint8_t *)receive7,1);
-	}
+	}  
 	
 	if (huart == &huart4)
 	{
-		HAL_UART_Transmit(&huart4,start_error,sizeof(start_error),0xffff);
+		if (WifiBufLen == 0 &&  wifiRxBuffer[0]=='{')
+		{
+			// 开始接收状态
+			flag_wifibegin = 1;
+			wifiStartListening();
+			return;
+		}
+		// 接收到为数字
+		if (flag_uartbegin == 1 && wifiRxBuffer[0])
+		{
+			if (WifiBufLen < 20) 
+			{
+				/*
+				if(receive7[0]=='0' && RcvBufLen==0)
+				{
+					HAL_UART_Receive_IT(huart,(uint8_t *)receive7,1);
+					return;
+				}  */
+				WifiBuf[WifiBufLen++] = wifiRxBuffer[0];
+				
+			}
+		}
+		if (RcvBufLen == 20 || wifiRxBuffer[0]=='}')
+		{
+			// 重置为开始状态
+			flag_wifibegin = 0;
+			RcvBufLen = 0;
+
+			// 这里开始解析CJSON
+		}
 		wifiStartListening();
 	}
 }
@@ -422,6 +464,4 @@ void dataCurve()
 		loopVortex();
 	}
 }
-
-
 

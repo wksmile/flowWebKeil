@@ -38,4 +38,8 @@ void UART_Send_END(void);
 
 // 曲线切换函数
 void dataCurve(void);
+
+// 打开wifi接收中断
+void wifiStartListening(void);
+
 #endif
