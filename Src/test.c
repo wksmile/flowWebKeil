@@ -25,7 +25,7 @@ uint8_t aRxBuffer[20];
 uint8_t sendData7 = 'R';
 uint8_t receive[20];
 // 7号串口接收数据
-char receive7[20];
+char receive7[100];
 
 char receive1[20];
 
@@ -46,10 +46,10 @@ void loop(){
 	}
 }  */
 
-uint8_t wifiRxBuffer[20];
+uint8_t wifiRxBuffer[250];
 // 打开wifi模块接收中断
 void wifiStartListening() {
-	HAL_UART_Receive_IT(&huart4,wifiRxBuffer,1);
+	HAL_UART_Receive_IT(&huart4,wifiRxBuffer,250);
 }
 
 // 2号串口
@@ -58,7 +58,7 @@ void open2Receive(){
 }
 
 void open7Receive(){
-	HAL_UART_Receive_IT(&huart7,(uint8_t *)receive7,20);
+	HAL_UART_Receive_IT(&huart7,(uint8_t *)receive7,100);
 }
 
 void open1Receive(){
@@ -171,8 +171,6 @@ void testUsart7receive(){
 		huart7.RxXferSize = 20;
 	}
 }
-
-
 
 // Solenoid valve test
 void valveTest(){
@@ -316,28 +314,38 @@ void handleRxCpltCallback(UART_HandleTypeDef *huart){
 	// 触摸屏接收的命令
 	if (huart == &huart1)
 	{
+		if(receive1[0]==0)
+		{
+			HAL_UART_Receive_IT(huart,receive1,1);
+			return;
+		}
+		if(receive1[0]>0 && receive1[0]<61)
+		{
+			float freq=(float)receive1[0];
+			SetInverterFreq(freq);
+		}
 		switch(receive1[0]) {
-			// 关闭电磁阀
+			// 打开上水阀
 			case 0xD1:
-				setRelayState(4,0);
-				break;
-				// 打开电磁阀
-			case 0xD2:
 				setRelayState(4,1);
+				break;
+			 // 关闭上水阀
+			case 0xD2:
+				setRelayState(4,0);
 				break;
 				// 开启电机
 			case 0xD3:
 				maStatus = StartInverter();
-				if(maStatus == HAL_OK)  HAL_UART_Transmit(huart,start_error,sizeof(start_error),0xffff);
 				break;
 				// 关闭电机
 			case 0xD4:
 				maStatus = StopInverter();
-				if(maStatus == HAL_OK)  HAL_UART_Transmit(huart,stop_error,sizeof(stop_error),0xffff);
 				break;
+				// 电子秤
 			case 0xD5:
 				state=0;
 				break;
+				// 超声波液位计
 			case 0xD6:
 				state=1;
 				break;
@@ -345,103 +353,66 @@ void handleRxCpltCallback(UART_HandleTypeDef *huart){
 			case 0xD7:
 				state=2;
 				break;
+				// 热能表
 			case 0xD8:
 				state=3;
 				break;
+				// 打开下水阀
+			case 0xD9:
+				setRelayState(3,1);
+				break;
+				// 关闭下水阀
+			case 0xDA:
+				setRelayState(3,0);
+				break;
+				// 打开侧阀
+			case 0xDB:
+				setRelayState(5,1);
+				break;
+				// 关闭侧阀
+			case 0xDC:
+				setRelayState(5,0);
+				break;
+				// 开始实验
+			case 0xDD:
+				StartInverter();
+				setRelayState(4,1);
+				break;
+				// 结束实验
+			case 0xDE:
+				StopInverter();
+				setRelayState(3,1);
+				break;
 		}
-		HAL_UART_Receive_IT(huart,receive1,1);
+		HAL_UART_Receive_IT(huart,(uint8_t *)receive1,1);
 	}
-
-    if (huart == &huart3)
-	{
-		if (receive3[0])
+	else if(huart == &huart7){
+		for(int i=0;i<100;i++)
 		{
-			RcvBuf3[RcvBufLen3++]=receive3[0];
+			receive7[i] = 0;
 		}
-		if(RcvBufLen3>=20) RcvBufLen3=0;
-		HAL_UART_Receive_IT(&huart3,receive3,1);
+		open7Receive();
 	}
-	// 电子秤接收到数据,这里还要改回来，改为&huart7
-	if (huart == &huart7)
+	else
 	{
-		if (RcvBufLen == 0 &&  receive7[0]=='w')
-		{
-			// 开始接收状态
-			flag_uartbegin = 1;
-			HAL_UART_Receive_IT(huart,(uint8_t *)receive7,1);
-			return;
-		}
-		// 接收到为数字
-		if (flag_uartbegin == 1 && receive7[0]>='0' && receive7[0]<='9')
-		{
-			if (RcvBufLen < 20) 
-			{
-				/*
-				if(receive7[0]=='0' && RcvBufLen==0)
-				{
-					HAL_UART_Receive_IT(huart,(uint8_t *)receive7,1);
-					return;
-				}  */
-				RcvBuf[RcvBufLen++] = receive7[0];
-				
-			}
-		}
-		if (RcvBufLen == 20 || receive7[0]=='.' || receive7[0]=='k')
-		{
-			// 重置为开始状态
-			flag_uartbegin = 0;
-			weightTest=(int)RcvBuf;
-			uint32_t dealRcvBuf = ridOfZero(RcvBuf);
-			sprintf(buf,"add 13,0,%d",dealRcvBuf);
-			uint8_t counter = 0;
-			while(1)
-			{
-				if(buf[counter] == '\0')
-				{
-					break;
-				}
-				counter ++;
-			}
-			HAL_UART_Transmit(&huart1,(uint8_t *)buf,counter,0xffff);
-			UART_Send_END();
-			RcvBufLen = 0;
-		}
-		HAL_UART_Receive_IT(huart,(uint8_t *)receive7,1);
-	}  
-	
-	if (huart == &huart4)
-	{
-		if (WifiBufLen == 0 &&  wifiRxBuffer[0]=='{')
-		{
-			// 开始接收状态
-			flag_wifibegin = 1;
-			wifiStartListening();
-			return;
-		}
-		// 接收到为数字
-		if (flag_uartbegin == 1 && wifiRxBuffer[0])
-		{
-			if (WifiBufLen < 20) 
-			{
-				/*
-				if(receive7[0]=='0' && RcvBufLen==0)
-				{
-					HAL_UART_Receive_IT(huart,(uint8_t *)receive7,1);
-					return;
-				}  */
-				WifiBuf[WifiBufLen++] = wifiRxBuffer[0];
-				
-			}
-		}
-		if (RcvBufLen == 20 || wifiRxBuffer[0]=='}')
-		{
-			// 重置为开始状态
-			flag_wifibegin = 0;
-			RcvBufLen = 0;
+		__nop();
+	}
+}
 
-			// 这里开始解析CJSON
+void handleErrorCallback(UART_HandleTypeDef *huart){
+	if (huart == &huart1){
+		HAL_UART_Receive_IT(huart,(uint8_t *)receive1,1);
+	}
+	if (huart == &huart7){
+		for(int i=0;i<100;i++)
+		{
+			receive7[i] = 0;
 		}
-		wifiStartListening();
+		open7Receive();
+	}
+	else
+	{
+		__nop();
 	}
 }
 
@@ -450,18 +421,21 @@ void dataCurve()
 	// 电子秤曲线
 	if(state==0)
 	{
-		HAL_UART_Transmit(&huart7,cmd,sizeof(cmd),0xFF);
-		HAL_Delay(100);
+		drawWeight();
 	}
 	// 超声波液位计
 	else if(state==1)
 	{
-		ultraData();
+		drawUltra();
 	}
 	// 涡街流量计
 	else if(state==2)
 	{
-		loopVortex();
+		drawVortex();
+	}
+	else if(state==3)
+	{
+		drawHeatMeter();
 	}
 }
 

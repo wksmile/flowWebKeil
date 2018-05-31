@@ -221,7 +221,7 @@ void ultraData()
     {
         // 获取超声波时间
         GetUltraDurationTime();
-        HAL_Delay(100);
+        HAL_Delay(10);
         stage=5;
     }
     if(stage==5)
@@ -239,6 +239,7 @@ void ultraData()
         huart5.pRxBuffPtr = receive5;
         stage=0;
     }
+    open5Receive();
 }
 
 char buf5[64];

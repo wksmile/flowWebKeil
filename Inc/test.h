@@ -27,6 +27,7 @@ void testUsart7receive(void);
 void valveTest(void);
 
 void handleRxCpltCallback(UART_HandleTypeDef *huart);
+void handleErrorCallback(UART_HandleTypeDef *huart);
 
 void UART_Send_start(void);
 

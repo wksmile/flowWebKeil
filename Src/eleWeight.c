@@ -43,6 +43,7 @@ float weight=0;
 // HAL_StatusTypeDef 类型
 // 数据格式 ww0000.00kg
 // 量程为30kg
+// 总耗时511ms
 void GetWeightValue()
 {                                                  
     //Conversion takes a long time, so start new conversion after reading.
@@ -56,7 +57,7 @@ void GetWeightValue()
 // 解析电子秤获取的重量
 float analyWeightValue(int8_t *rawData){
     float weight = 0;
-    if(rawData[0]!='w' && rawData[1]!='w')return -100;//Error...
+    if(rawData[0]!='w' || rawData[1]!='w')return -100;//Error...
     /*
     rawData[3]-='0';
     rawData[4]-='0';
@@ -67,28 +68,25 @@ float analyWeightValue(int8_t *rawData){
     weight = (rawData[3]-0x30)*100.0f + (rawData[4]-0x30)*10.0f + (rawData[5]-0x30)*1.0f + (rawData[7]-0x30)*0.10f + (rawData[8]-0x30)*0.01f;
     // 超过最大重量，关闭电机，打开下水阀
     if(weight > 20) {
-        // 关闭电机
-        StopInverter();
         // 打开下水阀
+        K3Close();
+    }
+    if(weight < 1) {
         K3Open();
     }
     return weight;
 }
 
-// 循环获取电子秤的重量
+// 循环获取电子秤的重量,电子秤采样时间500ms
 void loopWeight() {
-	GetWeightValue();
-	HAL_Delay(100);
+    // GetWeightValue();
+    // HAL_Delay(550);
     float innerWeight;
     //HAL_UART_Receive(&huart7,weightData,20,100);
     if(receive7[0] != 0){
         // innerWeight可能为-100；
         innerWeight=analyWeightValue((int8_t *)receive7);
         if(innerWeight!=-100) weight=innerWeight;
-        for(int i=0;i<20;i++)
-        {
-            receive7[i] = 0;
-        }
         //huart7.RxXferCount = 20;
         //huart7.pRxBuffPtr = receive7;
         // char ret[20] = *weightData;
@@ -100,8 +98,16 @@ void loopWeight() {
 		char weight[15] = "Weight:";
         sendData(weight,weightChar,100);
         */
-    }
-	open7Receive();
+		/*
+		for(int i=0;i<20;i++)
+		{
+			receive7[i] = 0;
+		}*/
+		// 这里需要加上这一句话
+		open7Receive(); 
+		huart7.RxXferCount = huart7.RxXferSize;
+		huart7.pRxBuffPtr = receive7;
+	}
 }
 
 // 电子秤清零

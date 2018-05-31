@@ -26,8 +26,8 @@ HAL_StatusTypeDef StartInverter(void);
 HAL_StatusTypeDef StopInverter(void);
 HAL_StatusTypeDef SetInverterFreq(float freq);
 
-HAL_StatusTypeDef readHeatMeter(void);
-
+void open6Receive(void);
+void open3Receive(void);
 // 获取涡街流量计总的流量
 float getVortexTotalFlow(void);
 // 获取涡街流量计总的速率
@@ -44,6 +44,15 @@ void loopHeatMeter(void);
 
 // 获取热能表数据,返回结构体
 struct HeatData getHeatData(void);
+
+void readHeatMeter(void);
+
+void drawHeatMeter(void);
+
+// 返回电机频率
+float getFrequency(void);
+
+void setFrequency(float req);
 
 // SERIALDEVICES_H
 #endif

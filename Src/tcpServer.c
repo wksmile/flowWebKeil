@@ -22,6 +22,7 @@ extern uint8_t wifiRxBuffer[20];
 // 开始的电机频率
 int inverterFrequency = 30;
 // 电机开始状态
+// 1电机运行，0电机停止
 uint8_t inverterStatus = 0;
 // SensorValues sv;
 
@@ -171,58 +172,83 @@ int main()
     return 0;
 }  */
 
-
+uint8_t result[20];
 // 解析客户端命令,注意命令大小写
 void SLOT_TCPdecoder(uint8_t receiveData[]){
-	char s[2] = "=";
+	char s[2] = ":";
 	char *key = strtok((char *)receiveData,s);
 	char *value = strtok(NULL,s);
 	// 没有收到数据
 	if(strlen(key)<=1) return;
 	// 入水阀门命令
-	char *valvein = "valvein";
-	char *valveout = "valveout";
-	char *valveside = "valveside";
+	char *valvein = "valveIn";
+	char *valveout = "valveOut";
+	char *valveside = "valveSide";
 	char *pump = "pump";
 	char *reset = "reset";
-	if(*key == *valvein) {
+    // 开始实验
+    char *startExp = "startExp";
+    char *stopExp = "stopExp";
+	if(strcmp(key,valvein)==0) {
 		int valueint=atoi(value);
+        if(valueint==0) valueint=1;
+        else valueint=0;
 		setRelayState(4, valueint);
 		return;
 	}
 	// 出水阀门命令
-	if(*key==*valveout) {
+	else if(strcmp(key,valveout)==0) {
 		int valueint=atoi(value);
 		setRelayState(3, valueint);
-		return;
-	}
-	// 侧阀门控制命令
-	if(*key==*valveside) {
-		int valueint = atoi(value);
-		setRelayState(1, valueint);
-		return;
-	}
-	// 设置电机频率
-	if(*key==*pump){
-		SetInverterFreq(atof(value));
-		inverterStatus = 1;
-		return;
-	}
-	// 重置实验
-	if(*key==*reset){
-	    setRelayState(4, 0);  //顶阀关
-        setRelayState(1, 0);  //侧阀关
-        setRelayState(3, 1);  //出水阀开
-        // 电机开始状态
-        inverterStatus = 0;
-        // 关闭电机
-        StopInverter();
         return;
 	}
+	// 侧阀门控制命令
+	else if(strcmp(key,valveside)==0) {
+		int valueint = atoi(value);
+        if(valueint==0) valueint=1;
+        else valueint=0;
+		setRelayState(5, valueint);
+	}
+	// 设置电机频率
+	else if(strcmp(key,pump)==0){
+        // 如果电机未开机，则打开电机
+        if(inverterStatus==0){
+            StartInverter();
+            HAL_Delay(100);
+        }
+		SetInverterFreq(atof(value));
+		inverterStatus = 1;
+	}
+	// 重置实验
+	// else if(strcmp(key,reset)==0){
+	//     setRelayState(4, 0);  
+ //        setRelayState(5, 0);  
+ //        setRelayState(3, 1);  
+ //        inverterStatus = 0;
+ //        StopInverter();
+	// }
+    // 打开电机
+    else if(strcmp(key,startExp)==0){
+        StartInverter();
+        HAL_Delay(100);
+        SetInverterFreq(30);
+    }
+    // 关闭电机
+    else if(strcmp(key,stopExp)==0 || strcmp(key,reset)==0){
+        StopInverter();
+        K4Close();
+        K5Close();
+        K3Close();
+        setFrequency(0);
+    }
 	//清零电子称 sv中保存有电子秤的重量
 	 //if(key=="zeroweight" && sv.weight<5){
 	//	SetWeightZero();
 	//}
+    for(int i=0;i<20;i++)
+    {
+        result[i]=0;
+    }
 }
 
 /*
@@ -232,22 +258,26 @@ void wifiStartListening() {
 	HAL_UART_Receive_IT(&huart4,wifiRxBuffer,1);
 }*/
 
-
 // 检查dataArr字符串是否包含'{ }'这种格式，包含返回1，不包含返回0；
 uint8_t *checkIsMatch(uint8_t dataArr[]){
     int isMatchLeft = 0;
     int isMatchRight = 0;
     int i=0;   // 数组索引
-    uint8_t result[10];
+    int j=0;
     int flag=0;
     while(dataArr[i]){
         if(dataArr[i]=='{'){
             flag=1;
         } else if(dataArr[i]=='}'){
-            return result;
-        } else if(flag == 1) {
-            result[i]=dataArr[i];
+            flag=2;
+        }else if(flag == 1) {
+            result[j]=dataArr[i];
+            j++;
         }
+        if(flag == 2) {
+            return result;
+        }
+        i++;
     }
     return 0;
 }
@@ -260,9 +290,10 @@ void wifiDataReceived() {
 		// 这里应该解析到完整指令然后才开始进入中断 判断是不是{...}这种格式
 		// 这里发送到单片机去解析数据
         if(checkIsMatch(wifiRxBuffer)){
-            SLOT_TCPdecoder(wifiRxBuffer);
+            SLOT_TCPdecoder(result);
             huart4.RxXferCount = 250;
             huart4.pRxBuffPtr = wifiRxBuffer;
+            wifiStartListening();
         }
 	}
 }
@@ -270,38 +301,62 @@ void wifiDataReceived() {
 // produce cJSON
 void sendInstrumentData()
 {
+    float w1=getWeight()*100;
+	w1=(int)w1/100.0;
+    float t1=getUlTemperature()*100;
+	t1=(int)t1/100.0;
+    int u1=getUlTime();
+    int d1=getUlDistance();
+    float f1=getVortexFlowrate()*100;
+	f1=(int)f1/100.0;
+    float f2=getVortexTotalFlow()*100;
+	f2=(int)f2/100.0;
+    int v1=getRelayState(4);
+    if(v1==0) v1=1;
+    else v1=0;
+    int v2=getRelayState(3);
+    int v3=getRelayState(5);
+    if(v3==0) v3=1;
+    else v3=0;
+
+    struct HeatData heatData=getHeatData();
+    float currentFlow = heatData.currentFlow;
+    float totalFlow = heatData.totalFlow;
+    float temperature = heatData.temperature;
+
+    float freq = getFrequency();
+
     cJSON * rootCJSON =  cJSON_CreateObject();
     cJSON_AddItemToObject(rootCJSON, "type", cJSON_CreateString("data"));
-    cJSON_AddItemToObject(rootCJSON, "ID", cJSON_CreateNumber(1));
+    cJSON_AddItemToObject(rootCJSON, "ID", cJSON_CreateNumber(2));
     // 电子秤
-    cJSON_AddItemToObject(rootCJSON, "W1", cJSON_CreateNumber( getWeight() ));
+    cJSON_AddItemToObject(rootCJSON, "W1", cJSON_CreateNumber(w1));
     // 超声波液位计温度
-    cJSON_AddItemToObject(rootCJSON, "T1", cJSON_CreateNumber( getUlTemperature() ));
+    cJSON_AddItemToObject(rootCJSON, "T1", cJSON_CreateNumber(t1));
     // 超声波液位计渡越时间
-    cJSON_AddItemToObject(rootCJSON, "U1", cJSON_CreateNumber( getUlTime() ));
+    cJSON_AddItemToObject(rootCJSON, "U1", cJSON_CreateNumber(u1));
     // 超声波液位计测量距离
-    cJSON_AddItemToObject(rootCJSON, "D1", cJSON_CreateNumber( getUlDistance() ));
+    cJSON_AddItemToObject(rootCJSON, "D1", cJSON_CreateNumber(d1));
     // 涡街流量计瞬时流量
-    cJSON_AddItemToObject(rootCJSON, "F1", cJSON_CreateNumber( getVortexFlowrate() ));
+    cJSON_AddItemToObject(rootCJSON, "F1", cJSON_CreateNumber(f1));
     // 涡街流量计累积流量
-    cJSON_AddItemToObject(rootCJSON, "F2", cJSON_CreateNumber( getVortexTotalFlow() ));
-	/*
-    struct HeatData heatData;
-    heatData.currentFlow=1;
-    heatData.totalFlow=2;
-    heatData.temperature=3;
-    热能表瞬时流量
-    cJSON_AddItemToObject(rootCJSON, "F3", cJSON_CreateNumber(heatData.currentFlow));
-    cJSON_AddItemToObject(rootCJSON, "F4", cJSON_CreateNumber(heatData.totalFlow));
-    cJSON_AddItemToObject(rootCJSON, "T2", cJSON_CreateNumber(heatData.temperature));
-	*/
-    cJSON_AddItemToObject(rootCJSON, "V1", cJSON_CreateNumber(getRelayState(1)));
-    cJSON_AddItemToObject(rootCJSON, "V2", cJSON_CreateNumber(getRelayState(2)));
-    cJSON_AddItemToObject(rootCJSON, "V3", cJSON_CreateNumber(getRelayState(3)));
-    cJSON_AddItemToObject(rootCJSON, "I1", cJSON_CreateNumber(50.0));
+    cJSON_AddItemToObject(rootCJSON, "F2", cJSON_CreateNumber(f2));
+	
+    //热能表瞬时流量
+    cJSON_AddItemToObject(rootCJSON, "F3", cJSON_CreateNumber(currentFlow));
+    cJSON_AddItemToObject(rootCJSON, "F4", cJSON_CreateNumber(totalFlow));
+    cJSON_AddItemToObject(rootCJSON, "T2", cJSON_CreateNumber(temperature));
+	
+    cJSON_AddItemToObject(rootCJSON, "V1", cJSON_CreateNumber(v1));
+    cJSON_AddItemToObject(rootCJSON, "V2", cJSON_CreateNumber(v2));
+    cJSON_AddItemToObject(rootCJSON, "V3", cJSON_CreateNumber(v3));
+    cJSON_AddItemToObject(rootCJSON, "I1", cJSON_CreateNumber(freq));
 
     char * cJsonTest = cJSON_Print(rootCJSON);
 
-    HAL_UART_Transmit(&huart4,(uint8_t*)cJsonTest,strlen(cJsonTest),0xff);
+    HAL_UART_Transmit(&huart4,(uint8_t*)cJsonTest,strlen(cJsonTest),0xffff);
+
+    cJSON_Delete(rootCJSON);
+	free(cJsonTest);
 }
 

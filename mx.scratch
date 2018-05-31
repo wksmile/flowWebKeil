@@ -26,8 +26,8 @@
   <config>
     <name>flowWebKwil1.0</name>				
     <device>STM32F767IGTx</device>		 
-    <heapSize>0x200</heapSize>
-    <stackSize>0x400</stackSize>
+    <heapSize>0x1000</heapSize>
+    <stackSize>0x1500</stackSize>
     
     	<cpuclock>54</cpuclock>
     	<board>custom</board>

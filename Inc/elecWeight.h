@@ -14,4 +14,7 @@ float getWeight(void);
 // 画电子秤的曲线
 void drawWeight();
 // SERIALDEVICES_H
+
+//获取电子秤数据
+void GetWeightValue(void);
 #endif 

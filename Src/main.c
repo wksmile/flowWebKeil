@@ -91,6 +91,67 @@ static void MX_NVIC_Init(void);
 
 /* USER CODE BEGIN 0 */
 
+UART_HandleTypeDef huart4;
+
+#define WIFIRESET(X) HAL_GPIO_WritePin(GPIOD,GPIO_PIN_0,(GPIO_PinState)X)
+#define WIFIUART huart4
+
+void WIFI_UARTSend(char* data, uint16_t len)
+{
+        HAL_UART_Transmit(&WIFIUART,(uint8_t*)data, len,100);
+}
+
+void WIFI_UARTSendString(char* stringD)
+{
+        uint16_t counter = 0;
+        while(1)
+        {
+                if(*(stringD + counter) == '\0' || counter >= 100) break;
+                counter++;
+        }
+
+        WIFI_UARTSend(stringD, counter);
+}
+
+
+void WIFI_ResetWIFI()
+{
+        WIFIRESET(0);
+        HAL_Delay(100);
+        WIFIRESET(1);
+}
+
+void WIFI_setParameter(char* SSID, char* PassWord,char* ServerAddress)
+{
+        char CR = 0x0d;
+
+        WIFI_UARTSendString("+++");
+        HAL_Delay(500);
+        WIFI_UARTSendString("a");
+        HAL_Delay(500);
+
+        WIFI_UARTSendString("AT+WMODE=STA");
+        WIFI_UARTSend(&CR,1);
+        HAL_Delay(500);
+
+        WIFI_UARTSendString("AT+WSTA=");
+        WIFI_UARTSendString(SSID);
+        WIFI_UARTSendString(",");
+        WIFI_UARTSendString(PassWord);
+        WIFI_UARTSend(&CR,1);
+        HAL_Delay(500);
+
+        WIFI_UARTSendString("AT+SOCKA=TCPC,");
+        WIFI_UARTSendString(ServerAddress);
+        WIFI_UARTSendString(",8899");
+        WIFI_UARTSend(&CR,1);
+        HAL_Delay(500);
+
+        WIFI_UARTSendString("AT+Z");
+        WIFI_UARTSend(&CR,1);
+        HAL_Delay(500);
+}
+
 /* USER CODE END 0 */
 
 int main(void)
@@ -115,6 +176,7 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
 
+	 HAL_Delay(1000);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -133,14 +195,11 @@ int main(void)
   MX_NVIC_Init();
 
   /* USER CODE BEGIN 2 */
- 
+
 HAL_GPIO_WritePin(GPIOD,GPIO_PIN_0,GPIO_PIN_SET);
 
 HAL_Delay(500);
 
-//WIFI_setParameter("123", "12345678","192.168.1.122");
-
-// WIFI_setParameter("TP-LINK_5D08", "00000000","192.168.1.101");
 //uint8_t weightRxBuffer[20];
 uint8_t testBufer1[20];
 
@@ -149,11 +208,15 @@ uint8_t testBufer1[20];
 // HAL_UART_Receive_IT(&huart2,aRxBuffer,20);
 //uint8_t bRxBuffer[20] = {'R'};
 
+//HAL_Delay(500);
+//WIFI_setParameter("123", "12345678","192.168.1.122");
+
 open1Receive();
-open2Receive();
+//open2Receive();
 open7Receive();
 open5Receive();
 open3Receive();
+open6Receive();
 
 UART_Send_start();
 UART_Change_Page();
@@ -162,25 +225,36 @@ UART_Change_Page();
 wifiStartListening();
 
 char sendData9[] = {'s','e','n','d'};
+//char sendData9[] = {0x55,0x55,0x55,0x55};
 uint8_t recievecahr;
 char cmd[] = {'R'};
 uint8_t buf[] = {"add 13,0,30"};
 uint8_t testSend = 0x55;
 
+/*
     cJSON * rootCJSON =  cJSON_CreateObject();
     cJSON_AddItemToObject(rootCJSON, "type", cJSON_CreateString("data"));
-    cJSON_AddItemToObject(rootCJSON, "ID", cJSON_CreateNumber(1));
+    cJSON_AddItemToObject(rootCJSON, "ID", cJSON_CreateNumber(0.465471));
     cJSON_AddItemToObject(rootCJSON, "W1", cJSON_CreateNumber(20));
-    cJSON_AddItemToObject(rootCJSON, "T1", cJSON_CreateNumber(20));
-    cJSON_AddItemToObject(rootCJSON, "U1", cJSON_CreateNumber(10));
-/*
+    cJSON_AddItemToObject(rootCJSON, "T1", cJSON_CreateNumber(20.567));
+    cJSON_AddItemToObject(rootCJSON, "U1", cJSON_CreateNumber(10.2436));
     cJSON_AddItemToObject(rootCJSON, "D1", cJSON_CreateNumber(20));
     cJSON_AddItemToObject(rootCJSON, "F1", cJSON_CreateNumber(5));
     cJSON_AddItemToObject(rootCJSON, "F2", cJSON_CreateNumber(4));
-*/
+	cJSON_AddItemToObject(rootCJSON, "W2", cJSON_CreateNumber(20));
+    cJSON_AddItemToObject(rootCJSON, "T3", cJSON_CreateNumber(20.567));
+    cJSON_AddItemToObject(rootCJSON, "U2", cJSON_CreateNumber(10.2436));
+    cJSON_AddItemToObject(rootCJSON, "D2", cJSON_CreateNumber(20));
+    cJSON_AddItemToObject(rootCJSON, "F2", cJSON_CreateNumber(5));
+    cJSON_AddItemToObject(rootCJSON, "F2", cJSON_CreateNumber(4));
 
 	char * cJsonTest = cJSON_Print(rootCJSON);
+*/
 	//cJSON_Delete(rootCJSON);
+	
+	unsigned char tcmd[] = {0x68, 0x20, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0x01, 0x03, 0x1f, 0x90, 0x23, 0x04, 0x16};
+    
+	GPIO_PinState keystate;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -188,23 +262,40 @@ uint8_t testSend = 0x55;
 
   while (1)
   {
-  // WIFI_setParameter("123", "12345678","192.168.1.122");
+     //HAL_Delay(1500);
+     //WIFI_setParameter("123", "12345678","192.168.1.122");
+
   //HAL_UART_Receive(&huart7,aRxBuffer,sizeof(aRxBuffer),100);
 	  
-	//  HAL_UART_Transmit(&WIFIUART,(uint8_t*)buf,sizeof(buf),100);
-	//  HAL_Delay(1500);
+	 // HAL_UART_Transmit(&WIFIUART,(uint8_t*)buf,sizeof(buf),100);
+	 // HAL_Delay(1500);
     // dataCurve();
-	  /*
+	  
+	  
+	 GetWeightValue();
+	  
+	 ultraData();
+	 
+	 loopHeatMeter();
+	  
 	 loopVortex();
+	  
 	 loopWeight();
-	  ultraData();
-	  sendInstrumentData();
-	  */
-	 HAL_UART_Transmit(&huart4,(uint8_t*)cJsonTest,strlen(cJsonTest),100);
-	 HAL_Delay(500);
-	  // wifiDataReceived();
-// HAL_UART_Transmit(&WIFIUART,&testSend,2,100);
-	//readHeatMeter();
+	  
+	 sendInstrumentData();
+	  
+	 dataCurve();
+	  
+	 wifiDataReceived();
+	  
+	  
+	  /*
+	  uint8_t counter;
+	  for(counter = 0; counter < 4; counter ++)
+      {
+      HAL_UART_Transmit(&huart3,(uint8_t *)&sendData9[counter],1,100);
+      }*/
+	  //HAL_UART_Transmit(&huart3,(uint8_t *)tcmd,sizeof(tcmd),0xffff);
 	  
   /* USER CODE END WHILE */
 
@@ -296,20 +387,23 @@ static void MX_NVIC_Init(void)
   HAL_NVIC_SetPriority(UART4_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(UART4_IRQn);
   /* USART3_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(USART3_IRQn, 1, 0);
+  HAL_NVIC_SetPriority(USART3_IRQn, 3, 0);
   HAL_NVIC_EnableIRQ(USART3_IRQn);
-  /* USART2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(USART2_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(USART2_IRQn);
   /* UART5_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(UART5_IRQn, 3, 0);
+  HAL_NVIC_SetPriority(UART5_IRQn, 4, 0);
   HAL_NVIC_EnableIRQ(UART5_IRQn);
   /* UART7_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(UART7_IRQn, 4, 0);
+  HAL_NVIC_SetPriority(UART7_IRQn, 6, 0);
   HAL_NVIC_EnableIRQ(UART7_IRQn);
   /* USART1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(USART1_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(USART1_IRQn);
+  /* USART6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(USART6_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(USART6_IRQn);
+  /* UART8_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(UART8_IRQn, 7, 0);
+  HAL_NVIC_EnableIRQ(UART8_IRQn);
 }
 
 /* SPI2 init function */
@@ -492,10 +586,10 @@ static void MX_USART6_UART_Init(void)
 {
 
   huart6.Instance = USART6;
-  huart6.Init.BaudRate = 115200;
-  huart6.Init.WordLength = UART_WORDLENGTH_7B;
+  huart6.Init.BaudRate = 2400;
+  huart6.Init.WordLength = UART_WORDLENGTH_9B;
   huart6.Init.StopBits = UART_STOPBITS_1;
-  huart6.Init.Parity = UART_PARITY_NONE;
+  huart6.Init.Parity = UART_PARITY_EVEN;
   huart6.Init.Mode = UART_MODE_TX_RX;
   huart6.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart6.Init.OverSampling = UART_OVERSAMPLING_16;
@@ -574,8 +668,14 @@ static void MX_GPIO_Init(void)
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	//UNUSED(huart);	
-	//handleRxCpltCallback(huart);
+	UNUSED(huart);	
+	handleRxCpltCallback(huart);
+}
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
+{
+	UNUSED(huart);	
+	handleErrorCallback(huart);
 }
 
 /* USER CODE END 4 */

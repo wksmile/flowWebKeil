@@ -1,0 +1,101 @@
+Configuration	flowWebKwil1.0
+STM32CubeMX 	4.23.0
+Date	05/15/2018
+MCU	STM32F767IGTx
+
+
+
+PERIPHERALS	MODES	FUNCTIONS	PINS
+RCC	Crystal/Ceramic Resonator	RCC_OSC_IN	PH0/OSC_IN
+RCC	Crystal/Ceramic Resonator	RCC_OSC_OUT	PH1/OSC_OUT
+RCC	Crystal/Ceramic Resonator	RCC_OSC32_IN	PC14/OSC32_IN
+RCC	Crystal/Ceramic Resonator	RCC_OSC32_OUT	PC15/OSC32_OUT
+SPI2	Full-Duplex Master	SPI2_MISO	PB14
+SPI2	Full-Duplex Master	SPI2_MOSI	PB15
+SPI2	Full-Duplex Master	SPI2_SCK	PB13
+SYS	Serial Wire	SYS_JTCK-SWCLK	PA14
+SYS	Serial Wire	SYS_JTMS-SWDIO	PA13
+SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
+UART4	Asynchronous	UART4_RX	PC11
+UART4	Asynchronous	UART4_TX	PC10
+UART5	Asynchronous	UART5_RX	PD2
+UART5	Asynchronous	UART5_TX	PC12
+UART7	Asynchronous	UART7_RX	PE7
+UART7	Asynchronous	UART7_TX	PE8
+UART8	Asynchronous	UART8_RX	PE0
+UART8	Asynchronous	UART8_TX	PE1
+USART1	Asynchronous	USART1_RX	PA10
+USART1	Asynchronous	USART1_TX	PA9
+USART2	Asynchronous	USART2_RX	PA3
+USART2	Asynchronous	USART2_TX	PA2
+USART3	Asynchronous	USART3_RX	PB11
+USART3	Asynchronous	USART3_TX	PB10
+USART6	Asynchronous	USART6_RX	PC7
+USART6	Asynchronous	USART6_TX	PC6
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+9	PC14/OSC32_IN	RCC_OSC32_IN	
+10	PC15/OSC32_OUT	RCC_OSC32_OUT	
+29	PH0/OSC_IN	RCC_OSC_IN	
+30	PH1/OSC_OUT	RCC_OSC_OUT	
+42	PA2	USART2_TX	
+47	PA3	USART2_RX	
+58	PB2	GPIO_Output	
+68	PE7	UART7_RX	
+69	PE8	UART7_TX	
+79	PB10	USART3_TX	
+80	PB11	USART3_RX	
+92	PB12	GPIO_Input	
+93	PB13	SPI2_SCK	
+94	PB14	SPI2_MISO	
+95	PB15	SPI2_MOSI	
+115	PC6	USART6_TX	
+116	PC7	USART6_RX	
+120	PA9	USART1_TX	
+121	PA10	USART1_RX	
+124	PA13	SYS_JTMS-SWDIO	
+137	PA14	SYS_JTCK-SWCLK	
+139	PC10	UART4_TX	
+140	PC11	UART4_RX	
+141	PC12	UART5_TX	
+142	PD0	GPIO_Output	
+144	PD2	UART5_RX	
+153	PG10	GPIO_Output	
+161	PB3	GPIO_Input	
+162	PB4	GPIO_Output	
+163	PB5	GPIO_Output	
+164	PB6	GPIO_Output	
+165	PB7	GPIO_Output	
+167	PB8	GPIO_Output	
+169	PE0	UART8_RX	
+170	PE1	UART8_TX	
+
+
+
+SOFTWARE PROJECT
+
+Project Settings : 
+Project Name : flowWebKwil1.0
+Project Folder : G:\projectFile\graduationProject\softProject\softwore\flowWebKwil1.0
+Toolchain / IDE : MDK-ARM V5
+Firmware Package Name and Version : STM32Cube FW_F7 V1.8.0
+
+
+Code Generation Settings : 
+STM32Cube Firmware Library Package : Copy all used libraries into the project folder
+Generate peripheral initialization as a pair of '.c/.h' files per peripheral : No
+Backup previously generated files when re-generating : No
+Delete previously generated files when not re-generated : Yes
+Set all free pins as analog (to optimize the power consumption) : No
+
+
+Toolchains Settings : 
+Compiler Optimizations : Balanced Size/Speed
+
+
+
+
+
+
