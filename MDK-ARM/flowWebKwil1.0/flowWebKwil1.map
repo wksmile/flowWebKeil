@@ -642,6 +642,7 @@ Section Cross References
     tcpserver.o(i.SLOT_TCPdecoder) refers to stm32f7xx_hal.o(i.HAL_Delay) for HAL_Delay
     tcpserver.o(i.SLOT_TCPdecoder) refers to atof.o(i.__hardfp_atof) for __hardfp_atof
     tcpserver.o(i.SLOT_TCPdecoder) refers to rs485loop.o(i.SetInverterFreq) for SetInverterFreq
+    tcpserver.o(i.SLOT_TCPdecoder) refers to eleweight.o(i.SetWeightZero) for SetWeightZero
     tcpserver.o(i.SLOT_TCPdecoder) refers to rs485loop.o(i.StopInverter) for StopInverter
     tcpserver.o(i.SLOT_TCPdecoder) refers to rs485loop.o(i.setFrequency) for setFrequency
     tcpserver.o(i.SLOT_TCPdecoder) refers to tcpserver.o(.data) for inverterStatus
@@ -1704,7 +1705,6 @@ Removing Unused input sections from the image.
     Removing eleweight.o(.rev16_text), (4 bytes).
     Removing eleweight.o(.revsh_text), (4 bytes).
     Removing eleweight.o(.rrx_text), (6 bytes).
-    Removing eleweight.o(i.SetWeightZero), (32 bytes).
     Removing iocontrol.o(.rev16_text), (4 bytes).
     Removing iocontrol.o(.revsh_text), (4 bytes).
     Removing iocontrol.o(.rrx_text), (6 bytes).
@@ -1775,7 +1775,7 @@ Removing Unused input sections from the image.
     Removing cjson.o(.constdata), (7 bytes).
     Removing dscalb.o(.text), (46 bytes).
 
-430 unused section(s) (total 39230 bytes) removed from the image.
+429 unused section(s) (total 39198 bytes) removed from the image.
 
 ==============================================================================
 
@@ -1807,63 +1807,63 @@ Image Symbol Table
     ../Src/stm32f7xx_it.c                    0x00000000   Number         0  stm32f7xx_it.o ABSOLUTE
     ../Src/system_stm32f7xx.c                0x00000000   Number         0  system_stm32f7xx.o ABSOLUTE
     ../clib/../cmprslib/zerorunl.c           0x00000000   Number         0  __dczerorl.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isupper_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isdigit_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ctype_c.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isspace_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ispunct_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isgraph_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isprint_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isalnum_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  iscntrl_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isxdigit_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ctype_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isspace_c.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ispunct_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isxdigit_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isspace_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  islower_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isupper_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isgraph_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isalnum_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ctype_c.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  iscntrl_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ctype_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isblank_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isalpha_o.o ABSOLUTE
     ../clib/microlib/ctype/tolower.c         0x00000000   Number         0  tolower.o ABSOLUTE
-    ../clib/microlib/division.c              0x00000000   Number         0  uldiv.o ABSOLUTE
     ../clib/microlib/division.c              0x00000000   Number         0  uidiv.o ABSOLUTE
+    ../clib/microlib/division.c              0x00000000   Number         0  uldiv.o ABSOLUTE
     ../clib/microlib/errno.c                 0x00000000   Number         0  errno.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry2.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
-    ../clib/microlib/longlong.c              0x00000000   Number         0  llsshr.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10b.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llushr.o ABSOLUTE
+    ../clib/microlib/longlong.c              0x00000000   Number         0  llsshr.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llshl.o ABSOLUTE
-    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloca.o ABSOLUTE
-    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocra.o ABSOLUTE
     ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloc.o ABSOLUTE
+    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocra.o ABSOLUTE
+    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloca.o ABSOLUTE
     ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocr.o ABSOLUTE
     ../clib/microlib/malloc/mvars.c          0x00000000   Number         0  mvars.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf8.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf7.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf6.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf5.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf4.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf3.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf2.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf1.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfa.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfb.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf0.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf1.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf2.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf4.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf5.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf6.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf7.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf8.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfa.o ABSOLUTE
     ../clib/microlib/printf/stubs.s          0x00000000   Number         0  stubs.o ABSOLUTE
     ../clib/microlib/stdio/fputc.c           0x00000000   Number         0  fputc.o ABSOLUTE
     ../clib/microlib/stdio/semi.s            0x00000000   Number         0  semi.o ABSOLUTE
     ../clib/microlib/stdio/streams.c         0x00000000   Number         0  stdout.o ABSOLUTE
-    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpya.o ABSOLUTE
     ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpyb.o ABSOLUTE
+    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpya.o ABSOLUTE
     ../clib/microlib/string/memset.c         0x00000000   Number         0  memseta.o ABSOLUTE
     ../clib/microlib/string/strcat.c         0x00000000   Number         0  strcat.o ABSOLUTE
     ../clib/microlib/string/strchr.c         0x00000000   Number         0  strchr.o ABSOLUTE
@@ -1875,22 +1875,22 @@ Image Symbol Table
     ../clib/microlib/string/strtok.c         0x00000000   Number         0  strtok_r.o ABSOLUTE
     ../clib/microlib/stubs.s                 0x00000000   Number         0  iusesemip.o ABSOLUTE
     ../clib/microlib/stubs.s                 0x00000000   Number         0  iusefp.o ABSOLUTE
-    ../clib/scanf.c                          0x00000000   Number         0  _scanf_int.o ABSOLUTE
+    ../clib/scanf.c                          0x00000000   Number         0  atoi.o ABSOLUTE
     ../clib/scanf.c                          0x00000000   Number         0  __0sscanf.o ABSOLUTE
-    ../clib/scanf.c                          0x00000000   Number         0  _strtoul.o ABSOLUTE
+    ../clib/scanf.c                          0x00000000   Number         0  _scanf_int.o ABSOLUTE
+    ../clib/scanf.c                          0x00000000   Number         0  _scanf.o ABSOLUTE
     ../clib/scanf.c                          0x00000000   Number         0  scanf_fp.o ABSOLUTE
+    ../clib/scanf.c                          0x00000000   Number         0  strtol.o ABSOLUTE
+    ../clib/scanf.c                          0x00000000   Number         0  _strtoul.o ABSOLUTE
     ../clib/scanf.c                          0x00000000   Number         0  _chval.o ABSOLUTE
     ../clib/scanf.c                          0x00000000   Number         0  _sgetc.o ABSOLUTE
-    ../clib/scanf.c                          0x00000000   Number         0  _scanf.o ABSOLUTE
-    ../clib/scanf.c                          0x00000000   Number         0  strtol.o ABSOLUTE
-    ../clib/scanf.c                          0x00000000   Number         0  scanf_char.o ABSOLUTE
-    ../clib/scanf.c                          0x00000000   Number         0  atoi.o ABSOLUTE
     ../clib/scanf.c                          0x00000000   Number         0  strtod.o ABSOLUTE
+    ../clib/scanf.c                          0x00000000   Number         0  scanf_char.o ABSOLUTE
     ../fplib/microlib/d2f.c                  0x00000000   Number         0  d2f.o ABSOLUTE
     ../fplib/microlib/fpadd.c                0x00000000   Number         0  dadd.o ABSOLUTE
     ../fplib/microlib/fpdiv.c                0x00000000   Number         0  ddiv.o ABSOLUTE
-    ../fplib/microlib/fpepilogue.c           0x00000000   Number         0  fepilogue.o ABSOLUTE
     ../fplib/microlib/fpepilogue.c           0x00000000   Number         0  depilogue.o ABSOLUTE
+    ../fplib/microlib/fpepilogue.c           0x00000000   Number         0  fepilogue.o ABSOLUTE
     ../fplib/microlib/fpfix.c                0x00000000   Number         0  dfixul.o ABSOLUTE
     ../fplib/microlib/fpflt.c                0x00000000   Number         0  dfltul.o ABSOLUTE
     ../fplib/microlib/fpmul.c                0x00000000   Number         0  dmul.o ABSOLUTE
@@ -1901,11 +1901,11 @@ Image Symbol Table
     ../mathlib/floor.c                       0x00000000   Number         0  floor.o ABSOLUTE
     ../mathlib/fpclassify.c                  0x00000000   Number         0  fpclassify.o ABSOLUTE
     ../mathlib/poly.c                        0x00000000   Number         0  poly.o ABSOLUTE
-    ../mathlib/pow.c                         0x00000000   Number         0  pow.o ABSOLUTE
     ../mathlib/pow.c                         0x00000000   Number         0  pow_x.o ABSOLUTE
+    ../mathlib/pow.c                         0x00000000   Number         0  pow.o ABSOLUTE
     ../mathlib/qnan.c                        0x00000000   Number         0  qnan.o ABSOLUTE
-    ../mathlib/sqrt.c                        0x00000000   Number         0  sqrt_x.o ABSOLUTE
     ../mathlib/sqrt.c                        0x00000000   Number         0  sqrt.o ABSOLUTE
+    ../mathlib/sqrt.c                        0x00000000   Number         0  sqrt_x.o ABSOLUTE
     ..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal.c 0x00000000   Number         0  stm32f7xx_hal.o ABSOLUTE
     ..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_cortex.c 0x00000000   Number         0  stm32f7xx_hal_cortex.o ABSOLUTE
     ..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_dma.c 0x00000000   Number         0  stm32f7xx_hal_dma.o ABSOLUTE
@@ -2070,137 +2070,138 @@ Image Symbol Table
     i.SLOT_TCPdecoder                        0x080034fc   Section        0  tcpserver.o(i.SLOT_TCPdecoder)
     i.SVC_Handler                            0x080036b0   Section        0  stm32f7xx_it.o(i.SVC_Handler)
     i.SetInverterFreq                        0x080036b4   Section        0  rs485loop.o(i.SetInverterFreq)
-    i.StartInverter                          0x08003730   Section        0  rs485loop.o(i.StartInverter)
-    i.StopInverter                           0x0800376c   Section        0  rs485loop.o(i.StopInverter)
-    i.SysTick_Handler                        0x080037a8   Section        0  stm32f7xx_it.o(i.SysTick_Handler)
-    i.SystemClock_Config                     0x080037b4   Section        0  main.o(i.SystemClock_Config)
-    i.SystemInit                             0x080038c0   Section        0  system_stm32f7xx.o(i.SystemInit)
-    i.UART4_IRQHandler                       0x08003924   Section        0  stm32f7xx_it.o(i.UART4_IRQHandler)
-    i.UART5_IRQHandler                       0x08003934   Section        0  stm32f7xx_it.o(i.UART5_IRQHandler)
-    i.UART7_IRQHandler                       0x08003944   Section        0  stm32f7xx_it.o(i.UART7_IRQHandler)
-    i.UART8_IRQHandler                       0x08003954   Section        0  stm32f7xx_it.o(i.UART8_IRQHandler)
-    i.UART_AdvFeatureConfig                  0x08003964   Section        0  stm32f7xx_hal_uart.o(i.UART_AdvFeatureConfig)
-    i.UART_Change_Page                       0x08003a50   Section        0  test.o(i.UART_Change_Page)
-    i.UART_CheckIdleState                    0x08003a70   Section        0  stm32f7xx_hal_uart.o(i.UART_CheckIdleState)
-    i.UART_DMAAbortOnError                   0x08003ae4   Section        0  stm32f7xx_hal_uart.o(i.UART_DMAAbortOnError)
-    UART_DMAAbortOnError                     0x08003ae5   Thumb Code    24  stm32f7xx_hal_uart.o(i.UART_DMAAbortOnError)
-    i.UART_EndRxTransfer                     0x08003afc   Section        0  stm32f7xx_hal_uart.o(i.UART_EndRxTransfer)
-    UART_EndRxTransfer                       0x08003afd   Thumb Code    32  stm32f7xx_hal_uart.o(i.UART_EndRxTransfer)
-    i.UART_EndTransmit_IT                    0x08003b1c   Section        0  stm32f7xx_hal_uart.o(i.UART_EndTransmit_IT)
-    UART_EndTransmit_IT                      0x08003b1d   Thumb Code    32  stm32f7xx_hal_uart.o(i.UART_EndTransmit_IT)
-    i.UART_Receive_IT                        0x08003b3c   Section        0  stm32f7xx_hal_uart.o(i.UART_Receive_IT)
-    UART_Receive_IT                          0x08003b3d   Thumb Code   136  stm32f7xx_hal_uart.o(i.UART_Receive_IT)
-    i.UART_Send_END                          0x08003bc4   Section        0  test.o(i.UART_Send_END)
-    i.UART_Send_start                        0x08003bfc   Section        0  test.o(i.UART_Send_start)
-    i.UART_SetConfig                         0x08003c10   Section        0  stm32f7xx_hal_uart.o(i.UART_SetConfig)
-    i.UART_Transmit_IT                       0x08003f9c   Section        0  stm32f7xx_hal_uart.o(i.UART_Transmit_IT)
-    UART_Transmit_IT                         0x08003f9d   Thumb Code   106  stm32f7xx_hal_uart.o(i.UART_Transmit_IT)
-    i.UART_WaitOnFlagUntilTimeout            0x08004006   Section        0  stm32f7xx_hal_uart.o(i.UART_WaitOnFlagUntilTimeout)
-    i.USART1_IRQHandler                      0x08004074   Section        0  stm32f7xx_it.o(i.USART1_IRQHandler)
-    i.USART3_IRQHandler                      0x08004084   Section        0  stm32f7xx_it.o(i.USART3_IRQHandler)
-    i.USART6_IRQHandler                      0x08004094   Section        0  stm32f7xx_it.o(i.USART6_IRQHandler)
-    i.UsageFault_Handler                     0x080040a4   Section        0  stm32f7xx_it.o(i.UsageFault_Handler)
-    i._Error_Handler                         0x080040a8   Section        0  main.o(i._Error_Handler)
-    i.__0sprintf                             0x080040ac   Section        0  printfa.o(i.__0sprintf)
-    i.__aeabi_errno_addr                     0x080040d4   Section        0  errno.o(i.__aeabi_errno_addr)
-    i.__hardfp_atof                          0x080040e0   Section        0  atof.o(i.__hardfp_atof)
-    i.__hardfp_floor                         0x08004118   Section        0  floor.o(i.__hardfp_floor)
-    i.__read_errno                           0x08004208   Section        0  errno.o(i.__read_errno)
-    i.__scatterload_copy                     0x08004214   Section       14  handlers.o(i.__scatterload_copy)
-    i.__scatterload_null                     0x08004222   Section        2  handlers.o(i.__scatterload_null)
-    i.__scatterload_zeroinit                 0x08004224   Section       14  handlers.o(i.__scatterload_zeroinit)
-    i.__set_errno                            0x08004234   Section        0  errno.o(i.__set_errno)
-    i._fp_digits                             0x08004240   Section        0  printfa.o(i._fp_digits)
-    _fp_digits                               0x08004241   Thumb Code   366  printfa.o(i._fp_digits)
-    i._is_digit                              0x080043c4   Section        0  scanf_fp.o(i._is_digit)
-    i._printf_core                           0x080043d4   Section        0  printfa.o(i._printf_core)
-    _printf_core                             0x080043d5   Thumb Code  1744  printfa.o(i._printf_core)
-    i._printf_post_padding                   0x08004ab0   Section        0  printfa.o(i._printf_post_padding)
-    _printf_post_padding                     0x08004ab1   Thumb Code    36  printfa.o(i._printf_post_padding)
-    i._printf_pre_padding                    0x08004ad4   Section        0  printfa.o(i._printf_pre_padding)
-    _printf_pre_padding                      0x08004ad5   Thumb Code    46  printfa.o(i._printf_pre_padding)
-    i._sputc                                 0x08004b02   Section        0  printfa.o(i._sputc)
-    _sputc                                   0x08004b03   Thumb Code    10  printfa.o(i._sputc)
-    i.analyWeightValue                       0x08004b0c   Section        0  eleweight.o(i.analyWeightValue)
-    i.anaslyUltraDistance                    0x08004bec   Section        0  ultrasonic.o(i.anaslyUltraDistance)
-    i.anaslyUltraTemperature                 0x08004c18   Section        0  ultrasonic.o(i.anaslyUltraTemperature)
-    i.anaslyUltraTime                        0x08004c42   Section        0  ultrasonic.o(i.anaslyUltraTime)
-    i.cJSON_AddItemToArray                   0x08004c5a   Section        0  cjson.o(i.cJSON_AddItemToArray)
-    i.cJSON_AddItemToObject                  0x08004c84   Section        0  cjson.o(i.cJSON_AddItemToObject)
-    i.cJSON_CreateNumber                     0x08004cb4   Section        0  cjson.o(i.cJSON_CreateNumber)
-    i.cJSON_CreateObject                     0x08004cde   Section        0  cjson.o(i.cJSON_CreateObject)
-    i.cJSON_CreateString                     0x08004cf0   Section        0  cjson.o(i.cJSON_CreateString)
-    i.cJSON_Delete                           0x08004d0c   Section        0  cjson.o(i.cJSON_Delete)
-    i.cJSON_New_Item                         0x08004d64   Section        0  cjson.o(i.cJSON_New_Item)
-    cJSON_New_Item                           0x08004d65   Thumb Code    26  cjson.o(i.cJSON_New_Item)
-    i.cJSON_Print                            0x08004d84   Section        0  cjson.o(i.cJSON_Print)
-    i.cJSON_strdup                           0x08004d98   Section        0  cjson.o(i.cJSON_strdup)
-    cJSON_strdup                             0x08004d99   Thumb Code    40  cjson.o(i.cJSON_strdup)
-    i.checkIsMatch                           0x08004dc4   Section        0  tcpserver.o(i.checkIsMatch)
-    i.dataCurve                              0x08004e0c   Section        0  test.o(i.dataCurve)
-    i.drawHeatCurrentFlow                    0x08004e48   Section        0  rs485loop.o(i.drawHeatCurrentFlow)
-    i.drawHeatMeter                          0x08004ea8   Section        0  rs485loop.o(i.drawHeatMeter)
-    i.drawHeatTemperature                    0x08004eb8   Section        0  rs485loop.o(i.drawHeatTemperature)
-    i.drawHeattotalFlow                      0x08004f18   Section        0  rs485loop.o(i.drawHeattotalFlow)
-    i.drawUltra                              0x08004f78   Section        0  ultrasonic.o(i.drawUltra)
-    i.drawUltraDistance                      0x08004f88   Section        0  ultrasonic.o(i.drawUltraDistance)
-    i.drawUltraTemperature                   0x08004fe0   Section        0  ultrasonic.o(i.drawUltraTemperature)
-    i.drawUltraTime                          0x08005040   Section        0  ultrasonic.o(i.drawUltraTime)
-    i.drawVortex                             0x080050a0   Section        0  rs485loop.o(i.drawVortex)
-    i.drawWeight                             0x08005158   Section        0  eleweight.o(i.drawWeight)
-    i.ensure                                 0x080051b8   Section        0  cjson.o(i.ensure)
-    ensure                                   0x080051b9   Thumb Code   104  cjson.o(i.ensure)
-    i.free                                   0x08005228   Section        0  malloc.o(i.free)
-    i.getFrequency                           0x08005278   Section        0  rs485loop.o(i.getFrequency)
-    i.getHeatData                            0x08005284   Section        0  rs485loop.o(i.getHeatData)
-    i.getRelayState                          0x08005298   Section        0  iocontrol.o(i.getRelayState)
-    i.getUlDistance                          0x080052e8   Section        0  ultrasonic.o(i.getUlDistance)
-    i.getUlTemperature                       0x080052f4   Section        0  ultrasonic.o(i.getUlTemperature)
-    i.getUlTime                              0x08005300   Section        0  ultrasonic.o(i.getUlTime)
-    i.getVortexFlowrate                      0x0800530c   Section        0  rs485loop.o(i.getVortexFlowrate)
-    i.getVortexTotalFlow                     0x08005318   Section        0  rs485loop.o(i.getVortexTotalFlow)
-    i.getWeight                              0x08005324   Section        0  eleweight.o(i.getWeight)
-    i.handleErrorCallback                    0x08005330   Section        0  test.o(i.handleErrorCallback)
-    i.handleRxCpltCallback                   0x08005374   Section        0  test.o(i.handleRxCpltCallback)
-    i.loopHeatMeter                          0x080054b4   Section        0  rs485loop.o(i.loopHeatMeter)
-    i.loopVortex                             0x0800550c   Section        0  rs485loop.o(i.loopVortex)
-    i.loopWeight                             0x08005558   Section        0  eleweight.o(i.loopWeight)
-    i.main                                   0x080055ac   Section        0  main.o(i.main)
-    i.malloc                                 0x08005690   Section        0  malloc.o(i.malloc)
-    i.open1Receive                           0x080056fc   Section        0  test.o(i.open1Receive)
-    i.open3Receive                           0x08005714   Section        0  rs485loop.o(i.open3Receive)
-    i.open5Receive                           0x0800572c   Section        0  ultrasonic.o(i.open5Receive)
-    i.open6Receive                           0x08005744   Section        0  rs485loop.o(i.open6Receive)
-    i.open7Receive                           0x0800575c   Section        0  test.o(i.open7Receive)
-    i.pow2gt                                 0x08005774   Section        0  cjson.o(i.pow2gt)
-    pow2gt                                   0x08005775   Thumb Code    28  cjson.o(i.pow2gt)
-    i.print_array                            0x08005790   Section        0  cjson.o(i.print_array)
-    print_array                              0x08005791   Thumb Code   578  cjson.o(i.print_array)
-    i.print_number                           0x080059e0   Section        0  cjson.o(i.print_number)
-    print_number                             0x080059e1   Thumb Code   322  cjson.o(i.print_number)
-    i.print_object                           0x08005b70   Section        0  cjson.o(i.print_object)
-    print_object                             0x08005b71   Thumb Code  1038  cjson.o(i.print_object)
-    i.print_string                           0x08005f88   Section        0  cjson.o(i.print_string)
-    print_string                             0x08005f89   Thumb Code    16  cjson.o(i.print_string)
-    i.print_string_ptr                       0x08005f98   Section        0  cjson.o(i.print_string_ptr)
-    print_string_ptr                         0x08005f99   Thumb Code   442  cjson.o(i.print_string_ptr)
-    i.print_value                            0x0800616c   Section        0  cjson.o(i.print_value)
-    print_value                              0x0800616d   Thumb Code   278  cjson.o(i.print_value)
-    i.readHeatMeter                          0x0800629c   Section        0  rs485loop.o(i.readHeatMeter)
-    i.sendInstrumentData                     0x080062cc   Section        0  tcpserver.o(i.sendInstrumentData)
-    i.setFrequency                           0x0800659c   Section        0  rs485loop.o(i.setFrequency)
-    i.setRelayState                          0x080065a8   Section        0  iocontrol.o(i.setRelayState)
-    i.suffix_object                          0x08006610   Section        0  cjson.o(i.suffix_object)
-    suffix_object                            0x08006611   Thumb Code     6  cjson.o(i.suffix_object)
-    i.ultraData                              0x08006618   Section        0  ultrasonic.o(i.ultraData)
-    i.update                                 0x08006738   Section        0  cjson.o(i.update)
-    update                                   0x08006739   Thumb Code    32  cjson.o(i.update)
-    i.wifiDataReceived                       0x08006758   Section        0  tcpserver.o(i.wifiDataReceived)
-    i.wifiStartListening                     0x08006790   Section        0  test.o(i.wifiStartListening)
-    .constdata                               0x080067a8   Section       24  system_stm32f7xx.o(.constdata)
-    .constdata                               0x080067c0   Section      129  ctype_o.o(.constdata)
-    .constdata                               0x08006844   Section        4  ctype_o.o(.constdata)
-    table                                    0x08006844   Data           4  ctype_o.o(.constdata)
+    i.SetWeightZero                          0x08003730   Section        0  eleweight.o(i.SetWeightZero)
+    i.StartInverter                          0x08003750   Section        0  rs485loop.o(i.StartInverter)
+    i.StopInverter                           0x0800378c   Section        0  rs485loop.o(i.StopInverter)
+    i.SysTick_Handler                        0x080037c8   Section        0  stm32f7xx_it.o(i.SysTick_Handler)
+    i.SystemClock_Config                     0x080037d4   Section        0  main.o(i.SystemClock_Config)
+    i.SystemInit                             0x080038e0   Section        0  system_stm32f7xx.o(i.SystemInit)
+    i.UART4_IRQHandler                       0x08003944   Section        0  stm32f7xx_it.o(i.UART4_IRQHandler)
+    i.UART5_IRQHandler                       0x08003954   Section        0  stm32f7xx_it.o(i.UART5_IRQHandler)
+    i.UART7_IRQHandler                       0x08003964   Section        0  stm32f7xx_it.o(i.UART7_IRQHandler)
+    i.UART8_IRQHandler                       0x08003974   Section        0  stm32f7xx_it.o(i.UART8_IRQHandler)
+    i.UART_AdvFeatureConfig                  0x08003984   Section        0  stm32f7xx_hal_uart.o(i.UART_AdvFeatureConfig)
+    i.UART_Change_Page                       0x08003a70   Section        0  test.o(i.UART_Change_Page)
+    i.UART_CheckIdleState                    0x08003a90   Section        0  stm32f7xx_hal_uart.o(i.UART_CheckIdleState)
+    i.UART_DMAAbortOnError                   0x08003b04   Section        0  stm32f7xx_hal_uart.o(i.UART_DMAAbortOnError)
+    UART_DMAAbortOnError                     0x08003b05   Thumb Code    24  stm32f7xx_hal_uart.o(i.UART_DMAAbortOnError)
+    i.UART_EndRxTransfer                     0x08003b1c   Section        0  stm32f7xx_hal_uart.o(i.UART_EndRxTransfer)
+    UART_EndRxTransfer                       0x08003b1d   Thumb Code    32  stm32f7xx_hal_uart.o(i.UART_EndRxTransfer)
+    i.UART_EndTransmit_IT                    0x08003b3c   Section        0  stm32f7xx_hal_uart.o(i.UART_EndTransmit_IT)
+    UART_EndTransmit_IT                      0x08003b3d   Thumb Code    32  stm32f7xx_hal_uart.o(i.UART_EndTransmit_IT)
+    i.UART_Receive_IT                        0x08003b5c   Section        0  stm32f7xx_hal_uart.o(i.UART_Receive_IT)
+    UART_Receive_IT                          0x08003b5d   Thumb Code   136  stm32f7xx_hal_uart.o(i.UART_Receive_IT)
+    i.UART_Send_END                          0x08003be4   Section        0  test.o(i.UART_Send_END)
+    i.UART_Send_start                        0x08003c1c   Section        0  test.o(i.UART_Send_start)
+    i.UART_SetConfig                         0x08003c30   Section        0  stm32f7xx_hal_uart.o(i.UART_SetConfig)
+    i.UART_Transmit_IT                       0x08003fbc   Section        0  stm32f7xx_hal_uart.o(i.UART_Transmit_IT)
+    UART_Transmit_IT                         0x08003fbd   Thumb Code   106  stm32f7xx_hal_uart.o(i.UART_Transmit_IT)
+    i.UART_WaitOnFlagUntilTimeout            0x08004026   Section        0  stm32f7xx_hal_uart.o(i.UART_WaitOnFlagUntilTimeout)
+    i.USART1_IRQHandler                      0x08004094   Section        0  stm32f7xx_it.o(i.USART1_IRQHandler)
+    i.USART3_IRQHandler                      0x080040a4   Section        0  stm32f7xx_it.o(i.USART3_IRQHandler)
+    i.USART6_IRQHandler                      0x080040b4   Section        0  stm32f7xx_it.o(i.USART6_IRQHandler)
+    i.UsageFault_Handler                     0x080040c4   Section        0  stm32f7xx_it.o(i.UsageFault_Handler)
+    i._Error_Handler                         0x080040c8   Section        0  main.o(i._Error_Handler)
+    i.__0sprintf                             0x080040cc   Section        0  printfa.o(i.__0sprintf)
+    i.__aeabi_errno_addr                     0x080040f4   Section        0  errno.o(i.__aeabi_errno_addr)
+    i.__hardfp_atof                          0x08004100   Section        0  atof.o(i.__hardfp_atof)
+    i.__hardfp_floor                         0x08004138   Section        0  floor.o(i.__hardfp_floor)
+    i.__read_errno                           0x08004228   Section        0  errno.o(i.__read_errno)
+    i.__scatterload_copy                     0x08004234   Section       14  handlers.o(i.__scatterload_copy)
+    i.__scatterload_null                     0x08004242   Section        2  handlers.o(i.__scatterload_null)
+    i.__scatterload_zeroinit                 0x08004244   Section       14  handlers.o(i.__scatterload_zeroinit)
+    i.__set_errno                            0x08004254   Section        0  errno.o(i.__set_errno)
+    i._fp_digits                             0x08004260   Section        0  printfa.o(i._fp_digits)
+    _fp_digits                               0x08004261   Thumb Code   366  printfa.o(i._fp_digits)
+    i._is_digit                              0x080043e4   Section        0  scanf_fp.o(i._is_digit)
+    i._printf_core                           0x080043f4   Section        0  printfa.o(i._printf_core)
+    _printf_core                             0x080043f5   Thumb Code  1744  printfa.o(i._printf_core)
+    i._printf_post_padding                   0x08004ad0   Section        0  printfa.o(i._printf_post_padding)
+    _printf_post_padding                     0x08004ad1   Thumb Code    36  printfa.o(i._printf_post_padding)
+    i._printf_pre_padding                    0x08004af4   Section        0  printfa.o(i._printf_pre_padding)
+    _printf_pre_padding                      0x08004af5   Thumb Code    46  printfa.o(i._printf_pre_padding)
+    i._sputc                                 0x08004b22   Section        0  printfa.o(i._sputc)
+    _sputc                                   0x08004b23   Thumb Code    10  printfa.o(i._sputc)
+    i.analyWeightValue                       0x08004b2c   Section        0  eleweight.o(i.analyWeightValue)
+    i.anaslyUltraDistance                    0x08004c08   Section        0  ultrasonic.o(i.anaslyUltraDistance)
+    i.anaslyUltraTemperature                 0x08004c34   Section        0  ultrasonic.o(i.anaslyUltraTemperature)
+    i.anaslyUltraTime                        0x08004c5e   Section        0  ultrasonic.o(i.anaslyUltraTime)
+    i.cJSON_AddItemToArray                   0x08004c76   Section        0  cjson.o(i.cJSON_AddItemToArray)
+    i.cJSON_AddItemToObject                  0x08004ca0   Section        0  cjson.o(i.cJSON_AddItemToObject)
+    i.cJSON_CreateNumber                     0x08004cd0   Section        0  cjson.o(i.cJSON_CreateNumber)
+    i.cJSON_CreateObject                     0x08004cfa   Section        0  cjson.o(i.cJSON_CreateObject)
+    i.cJSON_CreateString                     0x08004d0c   Section        0  cjson.o(i.cJSON_CreateString)
+    i.cJSON_Delete                           0x08004d28   Section        0  cjson.o(i.cJSON_Delete)
+    i.cJSON_New_Item                         0x08004d80   Section        0  cjson.o(i.cJSON_New_Item)
+    cJSON_New_Item                           0x08004d81   Thumb Code    26  cjson.o(i.cJSON_New_Item)
+    i.cJSON_Print                            0x08004da0   Section        0  cjson.o(i.cJSON_Print)
+    i.cJSON_strdup                           0x08004db4   Section        0  cjson.o(i.cJSON_strdup)
+    cJSON_strdup                             0x08004db5   Thumb Code    40  cjson.o(i.cJSON_strdup)
+    i.checkIsMatch                           0x08004de0   Section        0  tcpserver.o(i.checkIsMatch)
+    i.dataCurve                              0x08004e28   Section        0  test.o(i.dataCurve)
+    i.drawHeatCurrentFlow                    0x08004e64   Section        0  rs485loop.o(i.drawHeatCurrentFlow)
+    i.drawHeatMeter                          0x08004ec4   Section        0  rs485loop.o(i.drawHeatMeter)
+    i.drawHeatTemperature                    0x08004ed4   Section        0  rs485loop.o(i.drawHeatTemperature)
+    i.drawHeattotalFlow                      0x08004f34   Section        0  rs485loop.o(i.drawHeattotalFlow)
+    i.drawUltra                              0x08004f94   Section        0  ultrasonic.o(i.drawUltra)
+    i.drawUltraDistance                      0x08004fa4   Section        0  ultrasonic.o(i.drawUltraDistance)
+    i.drawUltraTemperature                   0x08004ffc   Section        0  ultrasonic.o(i.drawUltraTemperature)
+    i.drawUltraTime                          0x0800505c   Section        0  ultrasonic.o(i.drawUltraTime)
+    i.drawVortex                             0x080050bc   Section        0  rs485loop.o(i.drawVortex)
+    i.drawWeight                             0x08005174   Section        0  eleweight.o(i.drawWeight)
+    i.ensure                                 0x080051d4   Section        0  cjson.o(i.ensure)
+    ensure                                   0x080051d5   Thumb Code   104  cjson.o(i.ensure)
+    i.free                                   0x08005244   Section        0  malloc.o(i.free)
+    i.getFrequency                           0x08005294   Section        0  rs485loop.o(i.getFrequency)
+    i.getHeatData                            0x080052a0   Section        0  rs485loop.o(i.getHeatData)
+    i.getRelayState                          0x080052b4   Section        0  iocontrol.o(i.getRelayState)
+    i.getUlDistance                          0x08005304   Section        0  ultrasonic.o(i.getUlDistance)
+    i.getUlTemperature                       0x08005310   Section        0  ultrasonic.o(i.getUlTemperature)
+    i.getUlTime                              0x0800531c   Section        0  ultrasonic.o(i.getUlTime)
+    i.getVortexFlowrate                      0x08005328   Section        0  rs485loop.o(i.getVortexFlowrate)
+    i.getVortexTotalFlow                     0x08005334   Section        0  rs485loop.o(i.getVortexTotalFlow)
+    i.getWeight                              0x08005340   Section        0  eleweight.o(i.getWeight)
+    i.handleErrorCallback                    0x0800534c   Section        0  test.o(i.handleErrorCallback)
+    i.handleRxCpltCallback                   0x08005390   Section        0  test.o(i.handleRxCpltCallback)
+    i.loopHeatMeter                          0x080054d0   Section        0  rs485loop.o(i.loopHeatMeter)
+    i.loopVortex                             0x08005528   Section        0  rs485loop.o(i.loopVortex)
+    i.loopWeight                             0x08005574   Section        0  eleweight.o(i.loopWeight)
+    i.main                                   0x080055d8   Section        0  main.o(i.main)
+    i.malloc                                 0x080056bc   Section        0  malloc.o(i.malloc)
+    i.open1Receive                           0x08005728   Section        0  test.o(i.open1Receive)
+    i.open3Receive                           0x08005740   Section        0  rs485loop.o(i.open3Receive)
+    i.open5Receive                           0x08005758   Section        0  ultrasonic.o(i.open5Receive)
+    i.open6Receive                           0x08005770   Section        0  rs485loop.o(i.open6Receive)
+    i.open7Receive                           0x08005788   Section        0  test.o(i.open7Receive)
+    i.pow2gt                                 0x080057a0   Section        0  cjson.o(i.pow2gt)
+    pow2gt                                   0x080057a1   Thumb Code    28  cjson.o(i.pow2gt)
+    i.print_array                            0x080057bc   Section        0  cjson.o(i.print_array)
+    print_array                              0x080057bd   Thumb Code   578  cjson.o(i.print_array)
+    i.print_number                           0x08005a0c   Section        0  cjson.o(i.print_number)
+    print_number                             0x08005a0d   Thumb Code   322  cjson.o(i.print_number)
+    i.print_object                           0x08005b9c   Section        0  cjson.o(i.print_object)
+    print_object                             0x08005b9d   Thumb Code  1038  cjson.o(i.print_object)
+    i.print_string                           0x08005fb4   Section        0  cjson.o(i.print_string)
+    print_string                             0x08005fb5   Thumb Code    16  cjson.o(i.print_string)
+    i.print_string_ptr                       0x08005fc4   Section        0  cjson.o(i.print_string_ptr)
+    print_string_ptr                         0x08005fc5   Thumb Code   442  cjson.o(i.print_string_ptr)
+    i.print_value                            0x08006198   Section        0  cjson.o(i.print_value)
+    print_value                              0x08006199   Thumb Code   278  cjson.o(i.print_value)
+    i.readHeatMeter                          0x080062c8   Section        0  rs485loop.o(i.readHeatMeter)
+    i.sendInstrumentData                     0x080062f8   Section        0  tcpserver.o(i.sendInstrumentData)
+    i.setFrequency                           0x080065c0   Section        0  rs485loop.o(i.setFrequency)
+    i.setRelayState                          0x080065cc   Section        0  iocontrol.o(i.setRelayState)
+    i.suffix_object                          0x08006634   Section        0  cjson.o(i.suffix_object)
+    suffix_object                            0x08006635   Thumb Code     6  cjson.o(i.suffix_object)
+    i.ultraData                              0x0800663c   Section        0  ultrasonic.o(i.ultraData)
+    i.update                                 0x0800675c   Section        0  cjson.o(i.update)
+    update                                   0x0800675d   Thumb Code    32  cjson.o(i.update)
+    i.wifiDataReceived                       0x0800677c   Section        0  tcpserver.o(i.wifiDataReceived)
+    i.wifiStartListening                     0x080067b4   Section        0  test.o(i.wifiStartListening)
+    .constdata                               0x080067cc   Section       24  system_stm32f7xx.o(.constdata)
+    .constdata                               0x080067e4   Section      129  ctype_o.o(.constdata)
+    .constdata                               0x08006868   Section        4  ctype_o.o(.constdata)
+    table                                    0x08006868   Data           4  ctype_o.o(.constdata)
     .data                                    0x20000000   Section        4  stm32f7xx_hal.o(.data)
     .data                                    0x20000004   Section        4  system_stm32f7xx.o(.data)
     .data                                    0x20000008   Section        4  eleweight.o(.data)
@@ -2501,102 +2502,103 @@ Image Symbol Table
     MemManage_Handler                        0x080034b9   Thumb Code     4  stm32f7xx_it.o(i.MemManage_Handler)
     NMI_Handler                              0x080034bd   Thumb Code     2  stm32f7xx_it.o(i.NMI_Handler)
     PendSV_Handler                           0x080034f9   Thumb Code     2  stm32f7xx_it.o(i.PendSV_Handler)
-    SLOT_TCPdecoder                          0x080034fd   Thumb Code   350  tcpserver.o(i.SLOT_TCPdecoder)
+    SLOT_TCPdecoder                          0x080034fd   Thumb Code   338  tcpserver.o(i.SLOT_TCPdecoder)
     SVC_Handler                              0x080036b1   Thumb Code     2  stm32f7xx_it.o(i.SVC_Handler)
     SetInverterFreq                          0x080036b5   Thumb Code   104  rs485loop.o(i.SetInverterFreq)
-    StartInverter                            0x08003731   Thumb Code    46  rs485loop.o(i.StartInverter)
-    StopInverter                             0x0800376d   Thumb Code    46  rs485loop.o(i.StopInverter)
-    SysTick_Handler                          0x080037a9   Thumb Code    12  stm32f7xx_it.o(i.SysTick_Handler)
-    SystemClock_Config                       0x080037b5   Thumb Code   242  main.o(i.SystemClock_Config)
-    SystemInit                               0x080038c1   Thumb Code    82  system_stm32f7xx.o(i.SystemInit)
-    UART4_IRQHandler                         0x08003925   Thumb Code    10  stm32f7xx_it.o(i.UART4_IRQHandler)
-    UART5_IRQHandler                         0x08003935   Thumb Code    10  stm32f7xx_it.o(i.UART5_IRQHandler)
-    UART7_IRQHandler                         0x08003945   Thumb Code    10  stm32f7xx_it.o(i.UART7_IRQHandler)
-    UART8_IRQHandler                         0x08003955   Thumb Code    10  stm32f7xx_it.o(i.UART8_IRQHandler)
-    UART_AdvFeatureConfig                    0x08003965   Thumb Code   234  stm32f7xx_hal_uart.o(i.UART_AdvFeatureConfig)
-    UART_Change_Page                         0x08003a51   Thumb Code    22  test.o(i.UART_Change_Page)
-    UART_CheckIdleState                      0x08003a71   Thumb Code   116  stm32f7xx_hal_uart.o(i.UART_CheckIdleState)
-    UART_Send_END                            0x08003bc5   Thumb Code    46  test.o(i.UART_Send_END)
-    UART_Send_start                          0x08003bfd   Thumb Code    20  test.o(i.UART_Send_start)
-    UART_SetConfig                           0x08003c11   Thumb Code   858  stm32f7xx_hal_uart.o(i.UART_SetConfig)
-    UART_WaitOnFlagUntilTimeout              0x08004007   Thumb Code   108  stm32f7xx_hal_uart.o(i.UART_WaitOnFlagUntilTimeout)
-    USART1_IRQHandler                        0x08004075   Thumb Code    10  stm32f7xx_it.o(i.USART1_IRQHandler)
-    USART3_IRQHandler                        0x08004085   Thumb Code    10  stm32f7xx_it.o(i.USART3_IRQHandler)
-    USART6_IRQHandler                        0x08004095   Thumb Code    10  stm32f7xx_it.o(i.USART6_IRQHandler)
-    UsageFault_Handler                       0x080040a5   Thumb Code     4  stm32f7xx_it.o(i.UsageFault_Handler)
-    _Error_Handler                           0x080040a9   Thumb Code     4  main.o(i._Error_Handler)
-    __0sprintf                               0x080040ad   Thumb Code    34  printfa.o(i.__0sprintf)
-    __1sprintf                               0x080040ad   Thumb Code     0  printfa.o(i.__0sprintf)
-    __2sprintf                               0x080040ad   Thumb Code     0  printfa.o(i.__0sprintf)
-    __c89sprintf                             0x080040ad   Thumb Code     0  printfa.o(i.__0sprintf)
-    sprintf                                  0x080040ad   Thumb Code     0  printfa.o(i.__0sprintf)
-    __aeabi_errno_addr                       0x080040d5   Thumb Code     4  errno.o(i.__aeabi_errno_addr)
-    __rt_errno_addr                          0x080040d5   Thumb Code     0  errno.o(i.__aeabi_errno_addr)
-    __hardfp_atof                            0x080040e1   Thumb Code    44  atof.o(i.__hardfp_atof)
-    __hardfp_floor                           0x08004119   Thumb Code   214  floor.o(i.__hardfp_floor)
-    __read_errno                             0x08004209   Thumb Code     6  errno.o(i.__read_errno)
-    __scatterload_copy                       0x08004215   Thumb Code    14  handlers.o(i.__scatterload_copy)
-    __scatterload_null                       0x08004223   Thumb Code     2  handlers.o(i.__scatterload_null)
-    __scatterload_zeroinit                   0x08004225   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
-    __set_errno                              0x08004235   Thumb Code     6  errno.o(i.__set_errno)
-    _is_digit                                0x080043c5   Thumb Code    14  scanf_fp.o(i._is_digit)
-    analyWeightValue                         0x08004b0d   Thumb Code   202  eleweight.o(i.analyWeightValue)
-    anaslyUltraDistance                      0x08004bed   Thumb Code    40  ultrasonic.o(i.anaslyUltraDistance)
-    anaslyUltraTemperature                   0x08004c19   Thumb Code    42  ultrasonic.o(i.anaslyUltraTemperature)
-    anaslyUltraTime                          0x08004c43   Thumb Code    24  ultrasonic.o(i.anaslyUltraTime)
-    cJSON_AddItemToArray                     0x08004c5b   Thumb Code    42  cjson.o(i.cJSON_AddItemToArray)
-    cJSON_AddItemToObject                    0x08004c85   Thumb Code    44  cjson.o(i.cJSON_AddItemToObject)
-    cJSON_CreateNumber                       0x08004cb5   Thumb Code    42  cjson.o(i.cJSON_CreateNumber)
-    cJSON_CreateObject                       0x08004cdf   Thumb Code    18  cjson.o(i.cJSON_CreateObject)
-    cJSON_CreateString                       0x08004cf1   Thumb Code    28  cjson.o(i.cJSON_CreateString)
-    cJSON_Delete                             0x08004d0d   Thumb Code    82  cjson.o(i.cJSON_Delete)
-    cJSON_Print                              0x08004d85   Thumb Code    18  cjson.o(i.cJSON_Print)
-    checkIsMatch                             0x08004dc5   Thumb Code    68  tcpserver.o(i.checkIsMatch)
-    dataCurve                                0x08004e0d   Thumb Code    56  test.o(i.dataCurve)
-    drawHeatCurrentFlow                      0x08004e49   Thumb Code    76  rs485loop.o(i.drawHeatCurrentFlow)
-    drawHeatMeter                            0x08004ea9   Thumb Code    16  rs485loop.o(i.drawHeatMeter)
-    drawHeatTemperature                      0x08004eb9   Thumb Code    76  rs485loop.o(i.drawHeatTemperature)
-    drawHeattotalFlow                        0x08004f19   Thumb Code    76  rs485loop.o(i.drawHeattotalFlow)
-    drawUltra                                0x08004f79   Thumb Code    16  ultrasonic.o(i.drawUltra)
-    drawUltraDistance                        0x08004f89   Thumb Code    62  ultrasonic.o(i.drawUltraDistance)
-    drawUltraTemperature                     0x08004fe1   Thumb Code    72  ultrasonic.o(i.drawUltraTemperature)
-    drawUltraTime                            0x08005041   Thumb Code    72  ultrasonic.o(i.drawUltraTime)
-    drawVortex                               0x080050a1   Thumb Code   148  rs485loop.o(i.drawVortex)
-    drawWeight                               0x08005159   Thumb Code    70  eleweight.o(i.drawWeight)
-    free                                     0x08005229   Thumb Code    76  malloc.o(i.free)
-    getFrequency                             0x08005279   Thumb Code     8  rs485loop.o(i.getFrequency)
-    getHeatData                              0x08005285   Thumb Code    16  rs485loop.o(i.getHeatData)
-    getRelayState                            0x08005299   Thumb Code    74  iocontrol.o(i.getRelayState)
-    getUlDistance                            0x080052e9   Thumb Code     6  ultrasonic.o(i.getUlDistance)
-    getUlTemperature                         0x080052f5   Thumb Code     8  ultrasonic.o(i.getUlTemperature)
-    getUlTime                                0x08005301   Thumb Code     6  ultrasonic.o(i.getUlTime)
-    getVortexFlowrate                        0x0800530d   Thumb Code     8  rs485loop.o(i.getVortexFlowrate)
-    getVortexTotalFlow                       0x08005319   Thumb Code     8  rs485loop.o(i.getVortexTotalFlow)
-    getWeight                                0x08005325   Thumb Code     8  eleweight.o(i.getWeight)
-    handleErrorCallback                      0x08005331   Thumb Code    52  test.o(i.handleErrorCallback)
-    handleRxCpltCallback                     0x08005375   Thumb Code   296  test.o(i.handleRxCpltCallback)
-    loopHeatMeter                            0x080054b5   Thumb Code    74  rs485loop.o(i.loopHeatMeter)
-    loopVortex                               0x0800550d   Thumb Code    68  rs485loop.o(i.loopVortex)
-    loopWeight                               0x08005559   Thumb Code    68  eleweight.o(i.loopWeight)
-    main                                     0x080055ad   Thumb Code   186  main.o(i.main)
-    malloc                                   0x08005691   Thumb Code    92  malloc.o(i.malloc)
-    open1Receive                             0x080056fd   Thumb Code    14  test.o(i.open1Receive)
-    open3Receive                             0x08005715   Thumb Code    14  rs485loop.o(i.open3Receive)
-    open5Receive                             0x0800572d   Thumb Code    14  ultrasonic.o(i.open5Receive)
-    open6Receive                             0x08005745   Thumb Code    14  rs485loop.o(i.open6Receive)
-    open7Receive                             0x0800575d   Thumb Code    14  test.o(i.open7Receive)
-    readHeatMeter                            0x0800629d   Thumb Code    26  rs485loop.o(i.readHeatMeter)
-    sendInstrumentData                       0x080062cd   Thumb Code   630  tcpserver.o(i.sendInstrumentData)
-    setFrequency                             0x0800659d   Thumb Code     8  rs485loop.o(i.setFrequency)
-    setRelayState                            0x080065a9   Thumb Code    98  iocontrol.o(i.setRelayState)
-    ultraData                                0x08006619   Thumb Code   268  ultrasonic.o(i.ultraData)
-    wifiDataReceived                         0x08006759   Thumb Code    44  tcpserver.o(i.wifiDataReceived)
-    wifiStartListening                       0x08006791   Thumb Code    14  test.o(i.wifiStartListening)
-    AHBPrescTable                            0x080067a8   Data          16  system_stm32f7xx.o(.constdata)
-    APBPrescTable                            0x080067b8   Data           8  system_stm32f7xx.o(.constdata)
-    __ctype_table                            0x080067c0   Data         129  ctype_o.o(.constdata)
-    Region$$Table$$Base                      0x08006848   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x08006868   Number         0  anon$$obj.o(Region$$Table)
+    SetWeightZero                            0x08003731   Thumb Code    22  eleweight.o(i.SetWeightZero)
+    StartInverter                            0x08003751   Thumb Code    46  rs485loop.o(i.StartInverter)
+    StopInverter                             0x0800378d   Thumb Code    46  rs485loop.o(i.StopInverter)
+    SysTick_Handler                          0x080037c9   Thumb Code    12  stm32f7xx_it.o(i.SysTick_Handler)
+    SystemClock_Config                       0x080037d5   Thumb Code   242  main.o(i.SystemClock_Config)
+    SystemInit                               0x080038e1   Thumb Code    82  system_stm32f7xx.o(i.SystemInit)
+    UART4_IRQHandler                         0x08003945   Thumb Code    10  stm32f7xx_it.o(i.UART4_IRQHandler)
+    UART5_IRQHandler                         0x08003955   Thumb Code    10  stm32f7xx_it.o(i.UART5_IRQHandler)
+    UART7_IRQHandler                         0x08003965   Thumb Code    10  stm32f7xx_it.o(i.UART7_IRQHandler)
+    UART8_IRQHandler                         0x08003975   Thumb Code    10  stm32f7xx_it.o(i.UART8_IRQHandler)
+    UART_AdvFeatureConfig                    0x08003985   Thumb Code   234  stm32f7xx_hal_uart.o(i.UART_AdvFeatureConfig)
+    UART_Change_Page                         0x08003a71   Thumb Code    22  test.o(i.UART_Change_Page)
+    UART_CheckIdleState                      0x08003a91   Thumb Code   116  stm32f7xx_hal_uart.o(i.UART_CheckIdleState)
+    UART_Send_END                            0x08003be5   Thumb Code    46  test.o(i.UART_Send_END)
+    UART_Send_start                          0x08003c1d   Thumb Code    20  test.o(i.UART_Send_start)
+    UART_SetConfig                           0x08003c31   Thumb Code   858  stm32f7xx_hal_uart.o(i.UART_SetConfig)
+    UART_WaitOnFlagUntilTimeout              0x08004027   Thumb Code   108  stm32f7xx_hal_uart.o(i.UART_WaitOnFlagUntilTimeout)
+    USART1_IRQHandler                        0x08004095   Thumb Code    10  stm32f7xx_it.o(i.USART1_IRQHandler)
+    USART3_IRQHandler                        0x080040a5   Thumb Code    10  stm32f7xx_it.o(i.USART3_IRQHandler)
+    USART6_IRQHandler                        0x080040b5   Thumb Code    10  stm32f7xx_it.o(i.USART6_IRQHandler)
+    UsageFault_Handler                       0x080040c5   Thumb Code     4  stm32f7xx_it.o(i.UsageFault_Handler)
+    _Error_Handler                           0x080040c9   Thumb Code     4  main.o(i._Error_Handler)
+    __0sprintf                               0x080040cd   Thumb Code    34  printfa.o(i.__0sprintf)
+    __1sprintf                               0x080040cd   Thumb Code     0  printfa.o(i.__0sprintf)
+    __2sprintf                               0x080040cd   Thumb Code     0  printfa.o(i.__0sprintf)
+    __c89sprintf                             0x080040cd   Thumb Code     0  printfa.o(i.__0sprintf)
+    sprintf                                  0x080040cd   Thumb Code     0  printfa.o(i.__0sprintf)
+    __aeabi_errno_addr                       0x080040f5   Thumb Code     4  errno.o(i.__aeabi_errno_addr)
+    __rt_errno_addr                          0x080040f5   Thumb Code     0  errno.o(i.__aeabi_errno_addr)
+    __hardfp_atof                            0x08004101   Thumb Code    44  atof.o(i.__hardfp_atof)
+    __hardfp_floor                           0x08004139   Thumb Code   214  floor.o(i.__hardfp_floor)
+    __read_errno                             0x08004229   Thumb Code     6  errno.o(i.__read_errno)
+    __scatterload_copy                       0x08004235   Thumb Code    14  handlers.o(i.__scatterload_copy)
+    __scatterload_null                       0x08004243   Thumb Code     2  handlers.o(i.__scatterload_null)
+    __scatterload_zeroinit                   0x08004245   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
+    __set_errno                              0x08004255   Thumb Code     6  errno.o(i.__set_errno)
+    _is_digit                                0x080043e5   Thumb Code    14  scanf_fp.o(i._is_digit)
+    analyWeightValue                         0x08004b2d   Thumb Code   202  eleweight.o(i.analyWeightValue)
+    anaslyUltraDistance                      0x08004c09   Thumb Code    40  ultrasonic.o(i.anaslyUltraDistance)
+    anaslyUltraTemperature                   0x08004c35   Thumb Code    42  ultrasonic.o(i.anaslyUltraTemperature)
+    anaslyUltraTime                          0x08004c5f   Thumb Code    24  ultrasonic.o(i.anaslyUltraTime)
+    cJSON_AddItemToArray                     0x08004c77   Thumb Code    42  cjson.o(i.cJSON_AddItemToArray)
+    cJSON_AddItemToObject                    0x08004ca1   Thumb Code    44  cjson.o(i.cJSON_AddItemToObject)
+    cJSON_CreateNumber                       0x08004cd1   Thumb Code    42  cjson.o(i.cJSON_CreateNumber)
+    cJSON_CreateObject                       0x08004cfb   Thumb Code    18  cjson.o(i.cJSON_CreateObject)
+    cJSON_CreateString                       0x08004d0d   Thumb Code    28  cjson.o(i.cJSON_CreateString)
+    cJSON_Delete                             0x08004d29   Thumb Code    82  cjson.o(i.cJSON_Delete)
+    cJSON_Print                              0x08004da1   Thumb Code    18  cjson.o(i.cJSON_Print)
+    checkIsMatch                             0x08004de1   Thumb Code    68  tcpserver.o(i.checkIsMatch)
+    dataCurve                                0x08004e29   Thumb Code    56  test.o(i.dataCurve)
+    drawHeatCurrentFlow                      0x08004e65   Thumb Code    76  rs485loop.o(i.drawHeatCurrentFlow)
+    drawHeatMeter                            0x08004ec5   Thumb Code    16  rs485loop.o(i.drawHeatMeter)
+    drawHeatTemperature                      0x08004ed5   Thumb Code    76  rs485loop.o(i.drawHeatTemperature)
+    drawHeattotalFlow                        0x08004f35   Thumb Code    76  rs485loop.o(i.drawHeattotalFlow)
+    drawUltra                                0x08004f95   Thumb Code    16  ultrasonic.o(i.drawUltra)
+    drawUltraDistance                        0x08004fa5   Thumb Code    62  ultrasonic.o(i.drawUltraDistance)
+    drawUltraTemperature                     0x08004ffd   Thumb Code    72  ultrasonic.o(i.drawUltraTemperature)
+    drawUltraTime                            0x0800505d   Thumb Code    72  ultrasonic.o(i.drawUltraTime)
+    drawVortex                               0x080050bd   Thumb Code   148  rs485loop.o(i.drawVortex)
+    drawWeight                               0x08005175   Thumb Code    70  eleweight.o(i.drawWeight)
+    free                                     0x08005245   Thumb Code    76  malloc.o(i.free)
+    getFrequency                             0x08005295   Thumb Code     8  rs485loop.o(i.getFrequency)
+    getHeatData                              0x080052a1   Thumb Code    16  rs485loop.o(i.getHeatData)
+    getRelayState                            0x080052b5   Thumb Code    74  iocontrol.o(i.getRelayState)
+    getUlDistance                            0x08005305   Thumb Code     6  ultrasonic.o(i.getUlDistance)
+    getUlTemperature                         0x08005311   Thumb Code     8  ultrasonic.o(i.getUlTemperature)
+    getUlTime                                0x0800531d   Thumb Code     6  ultrasonic.o(i.getUlTime)
+    getVortexFlowrate                        0x08005329   Thumb Code     8  rs485loop.o(i.getVortexFlowrate)
+    getVortexTotalFlow                       0x08005335   Thumb Code     8  rs485loop.o(i.getVortexTotalFlow)
+    getWeight                                0x08005341   Thumb Code     8  eleweight.o(i.getWeight)
+    handleErrorCallback                      0x0800534d   Thumb Code    52  test.o(i.handleErrorCallback)
+    handleRxCpltCallback                     0x08005391   Thumb Code   296  test.o(i.handleRxCpltCallback)
+    loopHeatMeter                            0x080054d1   Thumb Code    74  rs485loop.o(i.loopHeatMeter)
+    loopVortex                               0x08005529   Thumb Code    68  rs485loop.o(i.loopVortex)
+    loopWeight                               0x08005575   Thumb Code    84  eleweight.o(i.loopWeight)
+    main                                     0x080055d9   Thumb Code   186  main.o(i.main)
+    malloc                                   0x080056bd   Thumb Code    92  malloc.o(i.malloc)
+    open1Receive                             0x08005729   Thumb Code    14  test.o(i.open1Receive)
+    open3Receive                             0x08005741   Thumb Code    14  rs485loop.o(i.open3Receive)
+    open5Receive                             0x08005759   Thumb Code    14  ultrasonic.o(i.open5Receive)
+    open6Receive                             0x08005771   Thumb Code    14  rs485loop.o(i.open6Receive)
+    open7Receive                             0x08005789   Thumb Code    14  test.o(i.open7Receive)
+    readHeatMeter                            0x080062c9   Thumb Code    26  rs485loop.o(i.readHeatMeter)
+    sendInstrumentData                       0x080062f9   Thumb Code   616  tcpserver.o(i.sendInstrumentData)
+    setFrequency                             0x080065c1   Thumb Code     8  rs485loop.o(i.setFrequency)
+    setRelayState                            0x080065cd   Thumb Code    98  iocontrol.o(i.setRelayState)
+    ultraData                                0x0800663d   Thumb Code   268  ultrasonic.o(i.ultraData)
+    wifiDataReceived                         0x0800677d   Thumb Code    44  tcpserver.o(i.wifiDataReceived)
+    wifiStartListening                       0x080067b5   Thumb Code    14  test.o(i.wifiStartListening)
+    AHBPrescTable                            0x080067cc   Data          16  system_stm32f7xx.o(.constdata)
+    APBPrescTable                            0x080067dc   Data           8  system_stm32f7xx.o(.constdata)
+    __ctype_table                            0x080067e4   Data         129  ctype_o.o(.constdata)
+    Region$$Table$$Base                      0x0800686c   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x0800688c   Number         0  anon$$obj.o(Region$$Table)
     uwTick                                   0x20000000   Data           4  stm32f7xx_hal.o(.data)
     SystemCoreClock                          0x20000004   Data           4  system_stm32f7xx.o(.data)
     weight                                   0x20000008   Data           4  eleweight.o(.data)
@@ -2668,9 +2670,9 @@ Memory Map of the image
 
   Image Entry point : 0x080001f9
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00006af8, Max: 0x00100000, ABSOLUTE, COMPRESSED[0x00006aa4])
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00006b1c, Max: 0x00100000, ABSOLUTE, COMPRESSED[0x00006ac8])
 
-    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00006868, Max: 0x00100000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x0000688c, Max: 0x00100000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -2792,126 +2794,127 @@ Memory Map of the image
     0x080036b0   0x080036b0   0x00000002   Code   RO         2541    i.SVC_Handler       stm32f7xx_it.o
     0x080036b2   0x080036b2   0x00000002   PAD
     0x080036b4   0x080036b4   0x0000007c   Code   RO         2756    i.SetInverterFreq   rs485loop.o
-    0x08003730   0x08003730   0x0000003c   Code   RO         2757    i.StartInverter     rs485loop.o
-    0x0800376c   0x0800376c   0x0000003c   Code   RO         2758    i.StopInverter      rs485loop.o
-    0x080037a8   0x080037a8   0x0000000c   Code   RO         2542    i.SysTick_Handler   stm32f7xx_it.o
-    0x080037b4   0x080037b4   0x0000010c   Code   RO         2343    i.SystemClock_Config  main.o
-    0x080038c0   0x080038c0   0x00000064   Code   RO         2294    i.SystemInit        system_stm32f7xx.o
-    0x08003924   0x08003924   0x00000010   Code   RO         2543    i.UART4_IRQHandler  stm32f7xx_it.o
-    0x08003934   0x08003934   0x00000010   Code   RO         2544    i.UART5_IRQHandler  stm32f7xx_it.o
-    0x08003944   0x08003944   0x00000010   Code   RO         2545    i.UART7_IRQHandler  stm32f7xx_it.o
-    0x08003954   0x08003954   0x00000010   Code   RO         2546    i.UART8_IRQHandler  stm32f7xx_it.o
-    0x08003964   0x08003964   0x000000ea   Code   RO         1548    i.UART_AdvFeatureConfig  stm32f7xx_hal_uart.o
-    0x08003a4e   0x08003a4e   0x00000002   PAD
-    0x08003a50   0x08003a50   0x00000020   Code   RO         3114    i.UART_Change_Page  test.o
-    0x08003a70   0x08003a70   0x00000074   Code   RO         1549    i.UART_CheckIdleState  stm32f7xx_hal_uart.o
-    0x08003ae4   0x08003ae4   0x00000018   Code   RO         1550    i.UART_DMAAbortOnError  stm32f7xx_hal_uart.o
-    0x08003afc   0x08003afc   0x00000020   Code   RO         1556    i.UART_EndRxTransfer  stm32f7xx_hal_uart.o
-    0x08003b1c   0x08003b1c   0x00000020   Code   RO         1557    i.UART_EndTransmit_IT  stm32f7xx_hal_uart.o
-    0x08003b3c   0x08003b3c   0x00000088   Code   RO         1559    i.UART_Receive_IT   stm32f7xx_hal_uart.o
-    0x08003bc4   0x08003bc4   0x00000038   Code   RO         3115    i.UART_Send_END     test.o
-    0x08003bfc   0x08003bfc   0x00000014   Code   RO         3116    i.UART_Send_start   test.o
-    0x08003c10   0x08003c10   0x0000038c   Code   RO         1560    i.UART_SetConfig    stm32f7xx_hal_uart.o
-    0x08003f9c   0x08003f9c   0x0000006a   Code   RO         1561    i.UART_Transmit_IT  stm32f7xx_hal_uart.o
-    0x08004006   0x08004006   0x0000006c   Code   RO         1562    i.UART_WaitOnFlagUntilTimeout  stm32f7xx_hal_uart.o
-    0x08004072   0x08004072   0x00000002   PAD
-    0x08004074   0x08004074   0x00000010   Code   RO         2547    i.USART1_IRQHandler  stm32f7xx_it.o
-    0x08004084   0x08004084   0x00000010   Code   RO         2548    i.USART3_IRQHandler  stm32f7xx_it.o
-    0x08004094   0x08004094   0x00000010   Code   RO         2549    i.USART6_IRQHandler  stm32f7xx_it.o
-    0x080040a4   0x080040a4   0x00000004   Code   RO         2550    i.UsageFault_Handler  stm32f7xx_it.o
-    0x080040a8   0x080040a8   0x00000004   Code   RO         2348    i._Error_Handler    main.o
-    0x080040ac   0x080040ac   0x00000028   Code   RO         3854    i.__0sprintf        mc_w.l(printfa.o)
-    0x080040d4   0x080040d4   0x00000008   Code   RO         3974    i.__aeabi_errno_addr  mc_w.l(errno.o)
-    0x080040dc   0x080040dc   0x00000004   PAD
-    0x080040e0   0x080040e0   0x00000038   Code   RO         3564    i.__hardfp_atof     m_wv.l(atof.o)
-    0x08004118   0x08004118   0x000000f0   Code   RO         3570    i.__hardfp_floor    m_wv.l(floor.o)
-    0x08004208   0x08004208   0x0000000c   Code   RO         3975    i.__read_errno      mc_w.l(errno.o)
-    0x08004214   0x08004214   0x0000000e   Code   RO         4065    i.__scatterload_copy  mc_w.l(handlers.o)
-    0x08004222   0x08004222   0x00000002   Code   RO         4066    i.__scatterload_null  mc_w.l(handlers.o)
-    0x08004224   0x08004224   0x0000000e   Code   RO         4067    i.__scatterload_zeroinit  mc_w.l(handlers.o)
-    0x08004232   0x08004232   0x00000002   PAD
-    0x08004234   0x08004234   0x0000000c   Code   RO         3976    i.__set_errno       mc_w.l(errno.o)
-    0x08004240   0x08004240   0x00000184   Code   RO         3859    i._fp_digits        mc_w.l(printfa.o)
-    0x080043c4   0x080043c4   0x0000000e   Code   RO         4047    i._is_digit         mc_w.l(scanf_fp.o)
-    0x080043d2   0x080043d2   0x00000002   PAD
-    0x080043d4   0x080043d4   0x000006dc   Code   RO         3860    i._printf_core      mc_w.l(printfa.o)
-    0x08004ab0   0x08004ab0   0x00000024   Code   RO         3861    i._printf_post_padding  mc_w.l(printfa.o)
-    0x08004ad4   0x08004ad4   0x0000002e   Code   RO         3862    i._printf_pre_padding  mc_w.l(printfa.o)
-    0x08004b02   0x08004b02   0x0000000a   Code   RO         3864    i._sputc            mc_w.l(printfa.o)
-    0x08004b0c   0x08004b0c   0x000000e0   Code   RO         2655    i.analyWeightValue  eleweight.o
-    0x08004bec   0x08004bec   0x0000002c   Code   RO         2991    i.anaslyUltraDistance  ultrasonic.o
-    0x08004c18   0x08004c18   0x0000002a   Code   RO         2992    i.anaslyUltraTemperature  ultrasonic.o
-    0x08004c42   0x08004c42   0x00000018   Code   RO         2993    i.anaslyUltraTime   ultrasonic.o
-    0x08004c5a   0x08004c5a   0x0000002a   Code   RO         3220    i.cJSON_AddItemToArray  cjson.o
-    0x08004c84   0x08004c84   0x00000030   Code   RO         3221    i.cJSON_AddItemToObject  cjson.o
-    0x08004cb4   0x08004cb4   0x0000002a   Code   RO         3230    i.cJSON_CreateNumber  cjson.o
-    0x08004cde   0x08004cde   0x00000012   Code   RO         3231    i.cJSON_CreateObject  cjson.o
-    0x08004cf0   0x08004cf0   0x0000001c   Code   RO         3232    i.cJSON_CreateString  cjson.o
-    0x08004d0c   0x08004d0c   0x00000058   Code   RO         3235    i.cJSON_Delete      cjson.o
-    0x08004d64   0x08004d64   0x00000020   Code   RO         3248    i.cJSON_New_Item    cjson.o
-    0x08004d84   0x08004d84   0x00000012   Code   RO         3251    i.cJSON_Print       cjson.o
-    0x08004d96   0x08004d96   0x00000002   PAD
-    0x08004d98   0x08004d98   0x0000002c   Code   RO         3257    i.cJSON_strdup      cjson.o
-    0x08004dc4   0x08004dc4   0x00000048   Code   RO         2918    i.checkIsMatch      tcpserver.o
-    0x08004e0c   0x08004e0c   0x0000003c   Code   RO         3117    i.dataCurve         test.o
-    0x08004e48   0x08004e48   0x00000060   Code   RO         2759    i.drawHeatCurrentFlow  rs485loop.o
-    0x08004ea8   0x08004ea8   0x00000010   Code   RO         2760    i.drawHeatMeter     rs485loop.o
-    0x08004eb8   0x08004eb8   0x00000060   Code   RO         2761    i.drawHeatTemperature  rs485loop.o
-    0x08004f18   0x08004f18   0x00000060   Code   RO         2762    i.drawHeattotalFlow  rs485loop.o
-    0x08004f78   0x08004f78   0x00000010   Code   RO         2995    i.drawUltra         ultrasonic.o
-    0x08004f88   0x08004f88   0x00000058   Code   RO         2996    i.drawUltraDistance  ultrasonic.o
-    0x08004fe0   0x08004fe0   0x00000060   Code   RO         2997    i.drawUltraTemperature  ultrasonic.o
-    0x08005040   0x08005040   0x00000060   Code   RO         2998    i.drawUltraTime     ultrasonic.o
-    0x080050a0   0x080050a0   0x000000b8   Code   RO         2763    i.drawVortex        rs485loop.o
-    0x08005158   0x08005158   0x00000060   Code   RO         2656    i.drawWeight        eleweight.o
-    0x080051b8   0x080051b8   0x00000070   Code   RO         3259    i.ensure            cjson.o
-    0x08005228   0x08005228   0x00000050   Code   RO         3880    i.free              mc_w.l(malloc.o)
-    0x08005278   0x08005278   0x0000000c   Code   RO         2764    i.getFrequency      rs485loop.o
-    0x08005284   0x08005284   0x00000014   Code   RO         2765    i.getHeatData       rs485loop.o
-    0x08005298   0x08005298   0x00000050   Code   RO         2722    i.getRelayState     iocontrol.o
-    0x080052e8   0x080052e8   0x0000000c   Code   RO         2999    i.getUlDistance     ultrasonic.o
-    0x080052f4   0x080052f4   0x0000000c   Code   RO         3000    i.getUlTemperature  ultrasonic.o
-    0x08005300   0x08005300   0x0000000c   Code   RO         3001    i.getUlTime         ultrasonic.o
-    0x0800530c   0x0800530c   0x0000000c   Code   RO         2766    i.getVortexFlowrate  rs485loop.o
-    0x08005318   0x08005318   0x0000000c   Code   RO         2767    i.getVortexTotalFlow  rs485loop.o
-    0x08005324   0x08005324   0x0000000c   Code   RO         2657    i.getWeight         eleweight.o
-    0x08005330   0x08005330   0x00000044   Code   RO         3118    i.handleErrorCallback  test.o
-    0x08005374   0x08005374   0x00000140   Code   RO         3119    i.handleRxCpltCallback  test.o
-    0x080054b4   0x080054b4   0x00000058   Code   RO         2768    i.loopHeatMeter     rs485loop.o
-    0x0800550c   0x0800550c   0x0000004c   Code   RO         2769    i.loopVortex        rs485loop.o
-    0x08005558   0x08005558   0x00000054   Code   RO         2658    i.loopWeight        eleweight.o
-    0x080055ac   0x080055ac   0x000000e4   Code   RO         2349    i.main              main.o
-    0x08005690   0x08005690   0x0000006c   Code   RO         3881    i.malloc            mc_w.l(malloc.o)
-    0x080056fc   0x080056fc   0x00000018   Code   RO         3120    i.open1Receive      test.o
-    0x08005714   0x08005714   0x00000018   Code   RO         2770    i.open3Receive      rs485loop.o
-    0x0800572c   0x0800572c   0x00000018   Code   RO         3003    i.open5Receive      ultrasonic.o
-    0x08005744   0x08005744   0x00000018   Code   RO         2771    i.open6Receive      rs485loop.o
-    0x0800575c   0x0800575c   0x00000018   Code   RO         3122    i.open7Receive      test.o
-    0x08005774   0x08005774   0x0000001c   Code   RO         3266    i.pow2gt            cjson.o
-    0x08005790   0x08005790   0x00000250   Code   RO         3267    i.print_array       cjson.o
-    0x080059e0   0x080059e0   0x00000190   Code   RO         3268    i.print_number      cjson.o
-    0x08005b70   0x08005b70   0x00000418   Code   RO         3269    i.print_object      cjson.o
-    0x08005f88   0x08005f88   0x00000010   Code   RO         3270    i.print_string      cjson.o
-    0x08005f98   0x08005f98   0x000001d4   Code   RO         3271    i.print_string_ptr  cjson.o
-    0x0800616c   0x0800616c   0x00000130   Code   RO         3272    i.print_value       cjson.o
-    0x0800629c   0x0800629c   0x00000030   Code   RO         2772    i.readHeatMeter     rs485loop.o
-    0x080062cc   0x080062cc   0x000002d0   Code   RO         2922    i.sendInstrumentData  tcpserver.o
-    0x0800659c   0x0800659c   0x0000000c   Code   RO         2773    i.setFrequency      rs485loop.o
-    0x080065a8   0x080065a8   0x00000068   Code   RO         2723    i.setRelayState     iocontrol.o
-    0x08006610   0x08006610   0x00000006   Code   RO         3274    i.suffix_object     cjson.o
-    0x08006616   0x08006616   0x00000002   PAD
-    0x08006618   0x08006618   0x00000120   Code   RO         3004    i.ultraData         ultrasonic.o
-    0x08006738   0x08006738   0x00000020   Code   RO         3275    i.update            cjson.o
-    0x08006758   0x08006758   0x00000038   Code   RO         2923    i.wifiDataReceived  tcpserver.o
-    0x08006790   0x08006790   0x00000018   Code   RO         3127    i.wifiStartListening  test.o
-    0x080067a8   0x080067a8   0x00000018   Data   RO         2295    .constdata          system_stm32f7xx.o
-    0x080067c0   0x080067c0   0x00000081   Data   RO         4016    .constdata          mc_w.l(ctype_o.o)
-    0x08006841   0x08006841   0x00000003   PAD
-    0x08006844   0x08006844   0x00000004   Data   RO         4017    .constdata          mc_w.l(ctype_o.o)
-    0x08006848   0x08006848   0x00000020   Data   RO         4063    Region$$Table       anon$$obj.o
+    0x08003730   0x08003730   0x00000020   Code   RO         2654    i.SetWeightZero     eleweight.o
+    0x08003750   0x08003750   0x0000003c   Code   RO         2757    i.StartInverter     rs485loop.o
+    0x0800378c   0x0800378c   0x0000003c   Code   RO         2758    i.StopInverter      rs485loop.o
+    0x080037c8   0x080037c8   0x0000000c   Code   RO         2542    i.SysTick_Handler   stm32f7xx_it.o
+    0x080037d4   0x080037d4   0x0000010c   Code   RO         2343    i.SystemClock_Config  main.o
+    0x080038e0   0x080038e0   0x00000064   Code   RO         2294    i.SystemInit        system_stm32f7xx.o
+    0x08003944   0x08003944   0x00000010   Code   RO         2543    i.UART4_IRQHandler  stm32f7xx_it.o
+    0x08003954   0x08003954   0x00000010   Code   RO         2544    i.UART5_IRQHandler  stm32f7xx_it.o
+    0x08003964   0x08003964   0x00000010   Code   RO         2545    i.UART7_IRQHandler  stm32f7xx_it.o
+    0x08003974   0x08003974   0x00000010   Code   RO         2546    i.UART8_IRQHandler  stm32f7xx_it.o
+    0x08003984   0x08003984   0x000000ea   Code   RO         1548    i.UART_AdvFeatureConfig  stm32f7xx_hal_uart.o
+    0x08003a6e   0x08003a6e   0x00000002   PAD
+    0x08003a70   0x08003a70   0x00000020   Code   RO         3114    i.UART_Change_Page  test.o
+    0x08003a90   0x08003a90   0x00000074   Code   RO         1549    i.UART_CheckIdleState  stm32f7xx_hal_uart.o
+    0x08003b04   0x08003b04   0x00000018   Code   RO         1550    i.UART_DMAAbortOnError  stm32f7xx_hal_uart.o
+    0x08003b1c   0x08003b1c   0x00000020   Code   RO         1556    i.UART_EndRxTransfer  stm32f7xx_hal_uart.o
+    0x08003b3c   0x08003b3c   0x00000020   Code   RO         1557    i.UART_EndTransmit_IT  stm32f7xx_hal_uart.o
+    0x08003b5c   0x08003b5c   0x00000088   Code   RO         1559    i.UART_Receive_IT   stm32f7xx_hal_uart.o
+    0x08003be4   0x08003be4   0x00000038   Code   RO         3115    i.UART_Send_END     test.o
+    0x08003c1c   0x08003c1c   0x00000014   Code   RO         3116    i.UART_Send_start   test.o
+    0x08003c30   0x08003c30   0x0000038c   Code   RO         1560    i.UART_SetConfig    stm32f7xx_hal_uart.o
+    0x08003fbc   0x08003fbc   0x0000006a   Code   RO         1561    i.UART_Transmit_IT  stm32f7xx_hal_uart.o
+    0x08004026   0x08004026   0x0000006c   Code   RO         1562    i.UART_WaitOnFlagUntilTimeout  stm32f7xx_hal_uart.o
+    0x08004092   0x08004092   0x00000002   PAD
+    0x08004094   0x08004094   0x00000010   Code   RO         2547    i.USART1_IRQHandler  stm32f7xx_it.o
+    0x080040a4   0x080040a4   0x00000010   Code   RO         2548    i.USART3_IRQHandler  stm32f7xx_it.o
+    0x080040b4   0x080040b4   0x00000010   Code   RO         2549    i.USART6_IRQHandler  stm32f7xx_it.o
+    0x080040c4   0x080040c4   0x00000004   Code   RO         2550    i.UsageFault_Handler  stm32f7xx_it.o
+    0x080040c8   0x080040c8   0x00000004   Code   RO         2348    i._Error_Handler    main.o
+    0x080040cc   0x080040cc   0x00000028   Code   RO         3854    i.__0sprintf        mc_w.l(printfa.o)
+    0x080040f4   0x080040f4   0x00000008   Code   RO         3974    i.__aeabi_errno_addr  mc_w.l(errno.o)
+    0x080040fc   0x080040fc   0x00000004   PAD
+    0x08004100   0x08004100   0x00000038   Code   RO         3564    i.__hardfp_atof     m_wv.l(atof.o)
+    0x08004138   0x08004138   0x000000f0   Code   RO         3570    i.__hardfp_floor    m_wv.l(floor.o)
+    0x08004228   0x08004228   0x0000000c   Code   RO         3975    i.__read_errno      mc_w.l(errno.o)
+    0x08004234   0x08004234   0x0000000e   Code   RO         4065    i.__scatterload_copy  mc_w.l(handlers.o)
+    0x08004242   0x08004242   0x00000002   Code   RO         4066    i.__scatterload_null  mc_w.l(handlers.o)
+    0x08004244   0x08004244   0x0000000e   Code   RO         4067    i.__scatterload_zeroinit  mc_w.l(handlers.o)
+    0x08004252   0x08004252   0x00000002   PAD
+    0x08004254   0x08004254   0x0000000c   Code   RO         3976    i.__set_errno       mc_w.l(errno.o)
+    0x08004260   0x08004260   0x00000184   Code   RO         3859    i._fp_digits        mc_w.l(printfa.o)
+    0x080043e4   0x080043e4   0x0000000e   Code   RO         4047    i._is_digit         mc_w.l(scanf_fp.o)
+    0x080043f2   0x080043f2   0x00000002   PAD
+    0x080043f4   0x080043f4   0x000006dc   Code   RO         3860    i._printf_core      mc_w.l(printfa.o)
+    0x08004ad0   0x08004ad0   0x00000024   Code   RO         3861    i._printf_post_padding  mc_w.l(printfa.o)
+    0x08004af4   0x08004af4   0x0000002e   Code   RO         3862    i._printf_pre_padding  mc_w.l(printfa.o)
+    0x08004b22   0x08004b22   0x0000000a   Code   RO         3864    i._sputc            mc_w.l(printfa.o)
+    0x08004b2c   0x08004b2c   0x000000dc   Code   RO         2655    i.analyWeightValue  eleweight.o
+    0x08004c08   0x08004c08   0x0000002c   Code   RO         2991    i.anaslyUltraDistance  ultrasonic.o
+    0x08004c34   0x08004c34   0x0000002a   Code   RO         2992    i.anaslyUltraTemperature  ultrasonic.o
+    0x08004c5e   0x08004c5e   0x00000018   Code   RO         2993    i.anaslyUltraTime   ultrasonic.o
+    0x08004c76   0x08004c76   0x0000002a   Code   RO         3220    i.cJSON_AddItemToArray  cjson.o
+    0x08004ca0   0x08004ca0   0x00000030   Code   RO         3221    i.cJSON_AddItemToObject  cjson.o
+    0x08004cd0   0x08004cd0   0x0000002a   Code   RO         3230    i.cJSON_CreateNumber  cjson.o
+    0x08004cfa   0x08004cfa   0x00000012   Code   RO         3231    i.cJSON_CreateObject  cjson.o
+    0x08004d0c   0x08004d0c   0x0000001c   Code   RO         3232    i.cJSON_CreateString  cjson.o
+    0x08004d28   0x08004d28   0x00000058   Code   RO         3235    i.cJSON_Delete      cjson.o
+    0x08004d80   0x08004d80   0x00000020   Code   RO         3248    i.cJSON_New_Item    cjson.o
+    0x08004da0   0x08004da0   0x00000012   Code   RO         3251    i.cJSON_Print       cjson.o
+    0x08004db2   0x08004db2   0x00000002   PAD
+    0x08004db4   0x08004db4   0x0000002c   Code   RO         3257    i.cJSON_strdup      cjson.o
+    0x08004de0   0x08004de0   0x00000048   Code   RO         2918    i.checkIsMatch      tcpserver.o
+    0x08004e28   0x08004e28   0x0000003c   Code   RO         3117    i.dataCurve         test.o
+    0x08004e64   0x08004e64   0x00000060   Code   RO         2759    i.drawHeatCurrentFlow  rs485loop.o
+    0x08004ec4   0x08004ec4   0x00000010   Code   RO         2760    i.drawHeatMeter     rs485loop.o
+    0x08004ed4   0x08004ed4   0x00000060   Code   RO         2761    i.drawHeatTemperature  rs485loop.o
+    0x08004f34   0x08004f34   0x00000060   Code   RO         2762    i.drawHeattotalFlow  rs485loop.o
+    0x08004f94   0x08004f94   0x00000010   Code   RO         2995    i.drawUltra         ultrasonic.o
+    0x08004fa4   0x08004fa4   0x00000058   Code   RO         2996    i.drawUltraDistance  ultrasonic.o
+    0x08004ffc   0x08004ffc   0x00000060   Code   RO         2997    i.drawUltraTemperature  ultrasonic.o
+    0x0800505c   0x0800505c   0x00000060   Code   RO         2998    i.drawUltraTime     ultrasonic.o
+    0x080050bc   0x080050bc   0x000000b8   Code   RO         2763    i.drawVortex        rs485loop.o
+    0x08005174   0x08005174   0x00000060   Code   RO         2656    i.drawWeight        eleweight.o
+    0x080051d4   0x080051d4   0x00000070   Code   RO         3259    i.ensure            cjson.o
+    0x08005244   0x08005244   0x00000050   Code   RO         3880    i.free              mc_w.l(malloc.o)
+    0x08005294   0x08005294   0x0000000c   Code   RO         2764    i.getFrequency      rs485loop.o
+    0x080052a0   0x080052a0   0x00000014   Code   RO         2765    i.getHeatData       rs485loop.o
+    0x080052b4   0x080052b4   0x00000050   Code   RO         2722    i.getRelayState     iocontrol.o
+    0x08005304   0x08005304   0x0000000c   Code   RO         2999    i.getUlDistance     ultrasonic.o
+    0x08005310   0x08005310   0x0000000c   Code   RO         3000    i.getUlTemperature  ultrasonic.o
+    0x0800531c   0x0800531c   0x0000000c   Code   RO         3001    i.getUlTime         ultrasonic.o
+    0x08005328   0x08005328   0x0000000c   Code   RO         2766    i.getVortexFlowrate  rs485loop.o
+    0x08005334   0x08005334   0x0000000c   Code   RO         2767    i.getVortexTotalFlow  rs485loop.o
+    0x08005340   0x08005340   0x0000000c   Code   RO         2657    i.getWeight         eleweight.o
+    0x0800534c   0x0800534c   0x00000044   Code   RO         3118    i.handleErrorCallback  test.o
+    0x08005390   0x08005390   0x00000140   Code   RO         3119    i.handleRxCpltCallback  test.o
+    0x080054d0   0x080054d0   0x00000058   Code   RO         2768    i.loopHeatMeter     rs485loop.o
+    0x08005528   0x08005528   0x0000004c   Code   RO         2769    i.loopVortex        rs485loop.o
+    0x08005574   0x08005574   0x00000064   Code   RO         2658    i.loopWeight        eleweight.o
+    0x080055d8   0x080055d8   0x000000e4   Code   RO         2349    i.main              main.o
+    0x080056bc   0x080056bc   0x0000006c   Code   RO         3881    i.malloc            mc_w.l(malloc.o)
+    0x08005728   0x08005728   0x00000018   Code   RO         3120    i.open1Receive      test.o
+    0x08005740   0x08005740   0x00000018   Code   RO         2770    i.open3Receive      rs485loop.o
+    0x08005758   0x08005758   0x00000018   Code   RO         3003    i.open5Receive      ultrasonic.o
+    0x08005770   0x08005770   0x00000018   Code   RO         2771    i.open6Receive      rs485loop.o
+    0x08005788   0x08005788   0x00000018   Code   RO         3122    i.open7Receive      test.o
+    0x080057a0   0x080057a0   0x0000001c   Code   RO         3266    i.pow2gt            cjson.o
+    0x080057bc   0x080057bc   0x00000250   Code   RO         3267    i.print_array       cjson.o
+    0x08005a0c   0x08005a0c   0x00000190   Code   RO         3268    i.print_number      cjson.o
+    0x08005b9c   0x08005b9c   0x00000418   Code   RO         3269    i.print_object      cjson.o
+    0x08005fb4   0x08005fb4   0x00000010   Code   RO         3270    i.print_string      cjson.o
+    0x08005fc4   0x08005fc4   0x000001d4   Code   RO         3271    i.print_string_ptr  cjson.o
+    0x08006198   0x08006198   0x00000130   Code   RO         3272    i.print_value       cjson.o
+    0x080062c8   0x080062c8   0x00000030   Code   RO         2772    i.readHeatMeter     rs485loop.o
+    0x080062f8   0x080062f8   0x000002c8   Code   RO         2922    i.sendInstrumentData  tcpserver.o
+    0x080065c0   0x080065c0   0x0000000c   Code   RO         2773    i.setFrequency      rs485loop.o
+    0x080065cc   0x080065cc   0x00000068   Code   RO         2723    i.setRelayState     iocontrol.o
+    0x08006634   0x08006634   0x00000006   Code   RO         3274    i.suffix_object     cjson.o
+    0x0800663a   0x0800663a   0x00000002   PAD
+    0x0800663c   0x0800663c   0x00000120   Code   RO         3004    i.ultraData         ultrasonic.o
+    0x0800675c   0x0800675c   0x00000020   Code   RO         3275    i.update            cjson.o
+    0x0800677c   0x0800677c   0x00000038   Code   RO         2923    i.wifiDataReceived  tcpserver.o
+    0x080067b4   0x080067b4   0x00000018   Code   RO         3127    i.wifiStartListening  test.o
+    0x080067cc   0x080067cc   0x00000018   Data   RO         2295    .constdata          system_stm32f7xx.o
+    0x080067e4   0x080067e4   0x00000081   Data   RO         4016    .constdata          mc_w.l(ctype_o.o)
+    0x08006865   0x08006865   0x00000003   PAD
+    0x08006868   0x08006868   0x00000004   Data   RO         4017    .constdata          mc_w.l(ctype_o.o)
+    0x0800686c   0x0800686c   0x00000020   Data   RO         4063    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08006868, Size: 0x00003060, Max: 0x00080000, ABSOLUTE, COMPRESSED[0x0000023c])
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x0800688c, Size: 0x00003060, Max: 0x00080000, ABSOLUTE, COMPRESSED[0x0000023c])
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -2948,7 +2951,7 @@ Image component sizes
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
       3366        198          0         12          0      16423   cjson.o
-       448         78          0          4         64       4330   eleweight.o
+       492         84          0          4         64       4934   eleweight.o
        184         24          0          0          0       1320   iocontrol.o
       1800        316          0          0        996      10980   main.o
       2052        290          0        532        404      15432   rs485loop.o
@@ -2965,12 +2968,12 @@ Image component sizes
       2564         54          0          0          0      11695   stm32f7xx_hal_uart.o
        148         42          0          0          0       8022   stm32f7xx_it.o
        100         18         24          4          0       1251   system_stm32f7xx.o
-      1284        192          0          5         20       6595   tcpserver.o
+      1276        210          0          5         20       6623   tcpserver.o
        628        108          0         56        574       7023   test.o
        850        154          0         18        192      10051   ultrasonic.o
 
     ----------------------------------------------------------------------
-     19920       1720        560        640      11728     550374   Object Totals
+     19956       1744        560        640      11728     551006   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         24          0          0          5          6          0   (incl. Padding)
 
@@ -3049,15 +3052,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     26032       1934        696        656      11728     538338   Grand Totals
-     26032       1934        696        572      11728     538338   ELF Image Totals (compressed)
-     26032       1934        696        572          0          0   ROM Totals
+     26068       1958        696        656      11728     538870   Grand Totals
+     26068       1958        696        572      11728     538870   ELF Image Totals (compressed)
+     26068       1958        696        572          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                26728 (  26.10kB)
+    Total RO  Size (Code + RO Data)                26764 (  26.14kB)
     Total RW  Size (RW Data + ZI Data)             12384 (  12.09kB)
-    Total ROM Size (Code + RO Data + RW Data)      27300 (  26.66kB)
+    Total ROM Size (Code + RO Data + RW Data)      27336 (  26.70kB)
 
 ==============================================================================
 

@@ -34,7 +34,7 @@ void weightAndUltraDataReceived() {
     }
 }   */
 
-extern char receive7[20];
+extern char receive7[100];
 
 float weight=0;
 
@@ -57,7 +57,7 @@ void GetWeightValue()
 // 解析电子秤获取的重量
 float analyWeightValue(int8_t *rawData){
     float weight = 0;
-    if(rawData[0]!='w' || rawData[1]!='w')return -100;//Error...
+    if(rawData[0]!='w' || rawData[1]!='w')return -1;//Error...
     /*
     rawData[3]-='0';
     rawData[4]-='0';
@@ -98,15 +98,14 @@ void loopWeight() {
 		char weight[15] = "Weight:";
         sendData(weight,weightChar,100);
         */
-		/*
-		for(int i=0;i<20;i++)
+		for(int i=0;i<100;i++)
 		{
 			receive7[i] = 0;
-		}*/
+		}
 		// 这里需要加上这一句话
 		open7Receive(); 
-		huart7.RxXferCount = huart7.RxXferSize;
-		huart7.pRxBuffPtr = receive7;
+        huart7.RxXferCount = huart7.RxXferSize;
+        huart7.pRxBuffPtr = receive7;
 	}
 }
 

@@ -19,6 +19,9 @@ extern uint8_t wifiRxBuffer[20];
 
 #define OVERFLOW_WEIGHT 20//The maximum weight upper tank could hold. If reach this threshold, pump will sop and valveout will open.
 
+// 设备id
+#define DEVICE_ID 0
+
 // 开始的电机频率
 int inverterFrequency = 30;
 // 电机开始状态
@@ -189,10 +192,11 @@ void SLOT_TCPdecoder(uint8_t receiveData[]){
     // 开始实验
     char *startExp = "startExp";
     char *stopExp = "stopExp";
+    char *weightSetZero = "weightZero";
 	if(strcmp(key,valvein)==0) {
 		int valueint=atoi(value);
-        if(valueint==0) valueint=1;
-        else valueint=0;
+        // if(valueint==0) valueint=1;
+        // else valueint=0;
 		setRelayState(4, valueint);
 		return;
 	}
@@ -205,8 +209,8 @@ void SLOT_TCPdecoder(uint8_t receiveData[]){
 	// 侧阀门控制命令
 	else if(strcmp(key,valveside)==0) {
 		int valueint = atoi(value);
-        if(valueint==0) valueint=1;
-        else valueint=0;
+        // if(valueint==0) valueint=1;
+        // else valueint=0;
 		setRelayState(5, valueint);
 	}
 	// 设置电机频率
@@ -219,6 +223,11 @@ void SLOT_TCPdecoder(uint8_t receiveData[]){
 		SetInverterFreq(atof(value));
 		inverterStatus = 1;
 	}
+    // 电子秤清零
+    else if(strcmp(key,weightSetZero)==0) {
+        SetWeightZero();
+        return;
+    }
 	// 重置实验
 	// else if(strcmp(key,reset)==0){
 	//     setRelayState(4, 0);  
@@ -312,12 +321,12 @@ void sendInstrumentData()
     float f2=getVortexTotalFlow()*100;
 	f2=(int)f2/100.0;
     int v1=getRelayState(4);
-    if(v1==0) v1=1;
-    else v1=0;
+    // if(v1==0) v1=1;
+    // else v1=0;
     int v2=getRelayState(3);
     int v3=getRelayState(5);
-    if(v3==0) v3=1;
-    else v3=0;
+    // if(v3==0) v3=1;
+    // else v3=0;
 
     struct HeatData heatData=getHeatData();
     float currentFlow = heatData.currentFlow;
@@ -328,7 +337,7 @@ void sendInstrumentData()
 
     cJSON * rootCJSON =  cJSON_CreateObject();
     cJSON_AddItemToObject(rootCJSON, "type", cJSON_CreateString("data"));
-    cJSON_AddItemToObject(rootCJSON, "ID", cJSON_CreateNumber(2));
+    cJSON_AddItemToObject(rootCJSON, "ID", cJSON_CreateNumber(DEVICE_ID));
     // 电子秤
     cJSON_AddItemToObject(rootCJSON, "W1", cJSON_CreateNumber(w1));
     // 超声波液位计温度
@@ -344,6 +353,7 @@ void sendInstrumentData()
 	
     //热能表瞬时流量
     cJSON_AddItemToObject(rootCJSON, "F3", cJSON_CreateNumber(currentFlow));
+    // 热能表累积流量
     cJSON_AddItemToObject(rootCJSON, "F4", cJSON_CreateNumber(totalFlow));
     cJSON_AddItemToObject(rootCJSON, "T2", cJSON_CreateNumber(temperature));
 	

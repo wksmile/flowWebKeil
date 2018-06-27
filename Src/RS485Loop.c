@@ -258,9 +258,9 @@ void loopVortex(){
     {
         receive3[i] = 0;
     }
+	open3Receive();
     huart3.RxXferCount = 30;
     huart3.pRxBuffPtr = receive3;
-    open3Receive();
 }
 
 // 画涡街流量计的数据

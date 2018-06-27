@@ -262,15 +262,15 @@ uint8_t testSend = 0x55;
 
   while (1)
   {
-     //HAL_Delay(1500);
-     //WIFI_setParameter("123", "12345678","192.168.1.122");
+	  
+ //HAL_Delay(1500);
+ //WIFI_setParameter("123", "12345678","192.168.1.122");
 
   //HAL_UART_Receive(&huart7,aRxBuffer,sizeof(aRxBuffer),100);
 	  
 	 // HAL_UART_Transmit(&WIFIUART,(uint8_t*)buf,sizeof(buf),100);
 	 // HAL_Delay(1500);
     // dataCurve();
-	  
 	  
 	 GetWeightValue();
 	  
@@ -288,7 +288,7 @@ uint8_t testSend = 0x55;
 	  
 	 wifiDataReceived();
 	  
-	  
+
 	  /*
 	  uint8_t counter;
 	  for(counter = 0; counter < 4; counter ++)
