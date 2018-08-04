@@ -20,7 +20,7 @@ extern uint8_t wifiRxBuffer[20];
 #define OVERFLOW_WEIGHT 20//The maximum weight upper tank could hold. If reach this threshold, pump will sop and valveout will open.
 
 // 设备id
-#define DEVICE_ID 3
+#define DEVICE_ID 4
 
 // 开始的电机频率
 int inverterFrequency = 30;
@@ -35,15 +35,15 @@ uint8_t inverterStatus = 0;
 // 中断发送
 
 void sendDataIT(char key[],char value[]){
-    //uint8_t TCPPack[25];
-    strcat(key, value);
-    HAL_UART_Transmit_IT(&huart4,(uint8_t *)key,strlen(key));
+	//uint8_t TCPPack[25];
+	strcat(key, value);
+	HAL_UART_Transmit_IT(&huart4,(uint8_t *)key,strlen(key));
 }
 
 // 普通发送，timeout一般设为100ms
 void sendData(char key[],char value[],uint8_t timeout){
-    strcat(key, value);
-    HAL_UART_Transmit(&huart4,(uint8_t *)key,strlen(key),timeout);
+	strcat(key, value);
+	HAL_UART_Transmit(&huart4,(uint8_t *)key,strlen(key),timeout);
 }
 
 // 发送数据到触摸屏
@@ -178,64 +178,64 @@ int main()
 uint8_t result[20];
 // 解析客户端命令,注意命令大小写
 void SLOT_TCPdecoder(uint8_t receiveData[]){
-    char s[2] = ":";
-    char *key = strtok((char *)receiveData,s);
-    char *value = strtok(NULL,s);
-    // 没有收到数据
-    if(strlen(key)<=1) return;
-    // 入水阀门命令
-    char *valvein = "valveIn";
-    char *valveout = "valveOut";
-    char *valveside = "valveSide";
-    char *pump = "pump";
-    char *reset = "reset";
+	char s[2] = ":";
+	char *key = strtok((char *)receiveData,s);
+	char *value = strtok(NULL,s);
+	// 没有收到数据
+	if(strlen(key)<=1) return;
+	// 入水阀门命令
+	char *valvein = "valveIn";
+	char *valveout = "valveOut";
+	char *valveside = "valveSide";
+	char *pump = "pump";
+	char *reset = "reset";
     // 开始实验
     char *startExp = "startExp";
     char *stopExp = "stopExp";
     char *weightSetZero = "weightZero";
-    if(strcmp(key,valvein)==0) {
-        int valueint=atoi(value);
+	if(strcmp(key,valvein)==0) {
+		int valueint=atoi(value);
         // if(valueint==0) valueint=1;
         // else valueint=0;
-        setRelayState(4, valueint);
+		setRelayState(4, valueint);
+		return;
+	}
+	// 出水阀门命令
+	else if(strcmp(key,valveout)==0) {
+		int valueint=atoi(value);
+		setRelayState(3, valueint);
         return;
-    }
-    // 出水阀门命令
-    else if(strcmp(key,valveout)==0) {
-        int valueint=atoi(value);
-        setRelayState(3, valueint);
-        return;
-    }
-    // 侧阀门控制命令
-    else if(strcmp(key,valveside)==0) {
-        int valueint = atoi(value);
+	}
+	// 侧阀门控制命令
+	else if(strcmp(key,valveside)==0) {
+		int valueint = atoi(value);
         // if(valueint==0) valueint=1;
         // else valueint=0;
-        setRelayState(5, valueint);
-    }
-    // 设置电机频率
-    else if(strcmp(key,pump)==0){
+		setRelayState(5, valueint);
+	}
+	// 设置电机频率
+	else if(strcmp(key,pump)==0){
         // 如果电机未开机，则打开电机
         if(inverterStatus==0){
             StartInverter();
             HAL_Delay(100);
         }
-        SetInverterFreq(atof(value));
-        inverterStatus = 1;
-    }
+		SetInverterFreq(atof(value));
+		inverterStatus = 1;
+	}
     // 电子秤清零
     else if(strcmp(key,weightSetZero)==0) {
         SetWeightZero();
         return;
     }
-    // 重置实验
-    // else if(strcmp(key,reset)==0){
-    //     setRelayState(4, 0);  
+	// 重置实验
+	// else if(strcmp(key,reset)==0){
+	//     setRelayState(4, 0);  
  //        setRelayState(5, 0);  
  //        setRelayState(3, 1);  
  //        inverterStatus = 0;
  //        StopInverter();
-    // }
+	// }
     // 打开电机
     else if(strcmp(key,startExp)==0){
         StartInverter();
@@ -250,10 +250,10 @@ void SLOT_TCPdecoder(uint8_t receiveData[]){
         K3Close();
         setFrequency(0);
     }
-    //清零电子称 sv中保存有电子秤的重量
-     //if(key=="zeroweight" && sv.weight<5){
-    //  SetWeightZero();
-    //}
+	//清零电子称 sv中保存有电子秤的重量
+	 //if(key=="zeroweight" && sv.weight<5){
+	//	SetWeightZero();
+	//}
     for(int i=0;i<20;i++)
     {
         result[i]=0;
@@ -264,7 +264,7 @@ void SLOT_TCPdecoder(uint8_t receiveData[]){
 uint8_t wifiRxBuffer[250];
 // 打开wifi模块接收中断
 void wifiStartListening() {
-    HAL_UART_Receive_IT(&huart4,wifiRxBuffer,1);
+	HAL_UART_Receive_IT(&huart4,wifiRxBuffer,1);
 }*/
 
 // 检查dataArr字符串是否包含'{ }'这种格式，包含返回1，不包含返回0；
@@ -293,33 +293,33 @@ uint8_t *checkIsMatch(uint8_t dataArr[]){
 
 // 循环查询wifi模块是否接收到数据
 void wifiDataReceived() {
-    if(huart4.RxXferCount < 250) {
+	if(huart4.RxXferCount < 250) {
         //unsigned char numOfBuffer;
-        //numOfBuffer = 250-huart4.RxXferCount;   // 实际接收到的字符总数
-        // 这里应该解析到完整指令然后才开始进入中断 判断是不是{...}这种格式
-        // 这里发送到单片机去解析数据
+		//numOfBuffer = 250-huart4.RxXferCount;   // 实际接收到的字符总数
+		// 这里应该解析到完整指令然后才开始进入中断 判断是不是{...}这种格式
+		// 这里发送到单片机去解析数据
         if(checkIsMatch(wifiRxBuffer)){
             SLOT_TCPdecoder(result);
             huart4.RxXferCount = 250;
             huart4.pRxBuffPtr = wifiRxBuffer;
             wifiStartListening();
         }
-    }
+	}
 }
 
 // produce cJSON
 void sendInstrumentData()
 {
     float w1=getWeight()*100;
-    w1=(int)w1/100.0;
+	w1=(int)w1/100.0;
     float t1=getUlTemperature()*100;
-    t1=(int)t1/100.0;
+	t1=(int)t1/100.0;
     int u1=getUlTime();
     int d1=getUlDistance();
     float f1=getVortexFlowrate()*100;
-    f1=(int)f1/100.0;
+	f1=(int)f1/100.0;
     float f2=getVortexTotalFlow()*100;
-    f2=(int)f2/100.0;
+	f2=(int)f2/100.0;
     int v1=getRelayState(4);
     // if(v1==0) v1=1;
     // else v1=0;
@@ -350,13 +350,13 @@ void sendInstrumentData()
     cJSON_AddItemToObject(rootCJSON, "F1", cJSON_CreateNumber(f1));
     // 涡街流量计累积流量
     cJSON_AddItemToObject(rootCJSON, "F2", cJSON_CreateNumber(f2));
-    
+	
     //热能表瞬时流量
     cJSON_AddItemToObject(rootCJSON, "F3", cJSON_CreateNumber(currentFlow));
     // 热能表累积流量
     cJSON_AddItemToObject(rootCJSON, "F4", cJSON_CreateNumber(totalFlow));
     cJSON_AddItemToObject(rootCJSON, "T2", cJSON_CreateNumber(temperature));
-    
+	
     cJSON_AddItemToObject(rootCJSON, "V1", cJSON_CreateNumber(v1));
     cJSON_AddItemToObject(rootCJSON, "V2", cJSON_CreateNumber(v2));
     cJSON_AddItemToObject(rootCJSON, "V3", cJSON_CreateNumber(v3));
@@ -367,6 +367,6 @@ void sendInstrumentData()
     HAL_UART_Transmit(&huart4,(uint8_t*)cJsonTest,strlen(cJsonTest),0xffff);
 
     cJSON_Delete(rootCJSON);
-    free(cJsonTest);
+	free(cJsonTest);
 }
 

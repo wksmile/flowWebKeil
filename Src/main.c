@@ -271,6 +271,8 @@ uint8_t testSend = 0x55;
 	 // HAL_UART_Transmit(&WIFIUART,(uint8_t*)buf,sizeof(buf),100);
 	 // HAL_Delay(1500);
     // dataCurve();
+
+
 	  
 	 GetWeightValue();
 	  
@@ -500,8 +502,8 @@ static void MX_UART8_Init(void)
 {
 
   huart8.Instance = UART8;
-  huart8.Init.BaudRate = 115200;
-  huart8.Init.WordLength = UART_WORDLENGTH_7B;
+  huart8.Init.BaudRate = 9600;
+  huart8.Init.WordLength = UART_WORDLENGTH_8B;
   huart8.Init.StopBits = UART_STOPBITS_1;
   huart8.Init.Parity = UART_PARITY_NONE;
   huart8.Init.Mode = UART_MODE_TX_RX;

@@ -172,12 +172,17 @@ char vortexData[30];
 // 返回的数据：02 04 08 00 00 25 00 01 F5 74 41 DA 82
 void GetVortexData()
 {
-    unsigned char cmd[8] = {0x02, 0x04, 0x00, 0x00, 0x00, 0x04, 0xf1, 0xfa};
-    //unsigned short CRCCode = CRCCodeTest(cmd, 6);
-    //cmd[6] = CRCCode&0xff;
-    //cmd[7] = (CRCCode>>8)&0xff;
+    unsigned char cmd[8] = {ADDR_FLOWMETER, 0x04, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00};
+    char ret[30] = {0};
+    int flowRate=0;
+    int totalFlow=0;
+    int i=0;
+
+    unsigned short CRCCode = CRCCodeTest(cmd, 6);
+    cmd[6] = CRCCode&0xff;
+    cmd[7] = (CRCCode>>8)&0xff;
     // 发送读取涡街流量计的数据
-    HAL_UART_Transmit(&huart3,cmd,8,100);
+    HAL_UART_Transmit(&huart3,cmd,sizeof(cmd),100);
 }
 
 // 解析涡街流量计读取的数据，ret为返回的数据

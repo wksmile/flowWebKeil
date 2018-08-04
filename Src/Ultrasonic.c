@@ -81,9 +81,9 @@ void GetUltraDistance()
 
 int anaslyUltraDistance(uint8_t rawData[5]){
     unsigned int distance;
-    // const char cmd[] = {0xe8, 0x02, 0xb4};
+    // const char cmd[] = {0xe8, 0x02, 0xbd};
     // int numOfBuffer = 5 - huart5.RxXferCount;
-    if(rawData[0] == NULL) return -1;   // 出错
+    if(rawData[0] == NULL && rawData[1] == NULL) return -1;   // 出错
     distance = rawData[0];
     distance<<=8;
     distance +=rawData[1];
@@ -123,6 +123,7 @@ int anaslyUltraTime(uint8_t rawData[5]){
 
 // 放在主函数中循环获取并发送超声波的温度，距离和时间
 void loopUltra(){
+    
     uint8_t ultraTemperature[5];
     uint8_t ultraDistance[5],ultraTime[5];
     // 发送获取超声波其温度并发送到远程
@@ -151,7 +152,7 @@ void loopUltra(){
             char uDistanceChar[16];
             sprintf(uDistanceChar,"%d",receiveDistance);
 			char distance[25]="Distance:";
-            sendData(distance,uDistanceChar,100);
+            sendData(distance,(char *)uDistance,100);
             // 发送到触摸屏
             sendDataTouchScreen(distance,uDistanceChar,100);
 
@@ -179,7 +180,7 @@ void ultraData()
     {
         // 发送查询距离
         GetUltraDistance();
-        HAL_Delay(100);
+        HAL_Delay(120);
         stage=1;
     }
     if(stage==1)
@@ -235,7 +236,7 @@ void ultraData()
         {
             receive5[i] = 0;
         }
-        huart5.RxXferCount = 5;
+        huart5.RxXferCount = huart5.RxXferSize;
         huart5.pRxBuffPtr = receive5;
         stage=0;
     }
